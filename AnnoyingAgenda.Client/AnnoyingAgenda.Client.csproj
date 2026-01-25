@@ -9,4 +9,17 @@
     <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
 
+	<ItemGroup>
+		<Resource Include="Assets\Buttons\AnnoyingAgenda-Button-Close.png"/>
+		<Resource Include="Assets\Buttons\AnnoyingAgenda-Button-Minimize.png"/>
+		<Resource Include="Assets\Buttons\AnnoyingAgenda-Button-Maximize.png"/>
+		<Resource Include="Assets\Buttons\AnnoyingAgenda-Button-Restore.png"/>
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Remove="Assets\Buttons\AnnoyingAgenda-Button-Close.png"/>
+		<None Remove="Assets\Buttons\AnnoyingAgenda-Button-Minimize.png"/>
+		<None Remove="Assets\Buttons\AnnoyingAgenda-Button-Maximize.png"/>
+		<None Remove="Assets\Buttons\AnnoyingAgenda-Button-Restore.png"/>
+	</ItemGroup>
 </Project>
