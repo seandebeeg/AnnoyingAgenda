@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:AnnoyingAgenda.Client"
         mc:Ignorable="d"
         WindowStyle="None"
-        Title="Annoying Agenda" Height="450" Width="800">
+        Title="Annoying Agenda" Height="450" Width="800"
+        MinHeight="300" MinWidth="475">
   <Grid>
     <Grid.RowDefinitions>
       <RowDefinition Height="32"/>
@@ -15,12 +16,6 @@
     
     <Border Grid.Row="0" Opacity="0" MouseDown="DragWindow" x:Name="DragButton" Background="Transparent"/>
 
-    <Border Grid.Row="1" BorderBrush="Gray" CornerRadius="10" BorderThickness="1">
-      <Grid>
-        <TextBlock Text="Welcome" HorizontalAlignment="Center" FontSize="50" FontWeight="UltraBold" FontFamily="Tw Cen MT Condensed"/>
-        <Button Height="100" Width="200" HorizontalAlignment="Right"/>
-        <Button Height="100" Width="200" HorizontalAlignment="Left"/>
-      </Grid>
-    </Border>
+    <Frame x:Name="MainNavigation" NavigationUIVisibility="Hidden" Grid.Row="1"/>
   </Grid>
 </Window>

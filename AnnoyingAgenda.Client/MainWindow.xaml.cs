@@ -10,6 +10,7 @@ namespace AnnoyingAgenda.Client
     public MainWindow()
     {
       InitializeComponent();
+      MainNavigation.Navigate(new MainMenu());
     }
 
     private void DragWindow(object sender, MouseButtonEventArgs e)
