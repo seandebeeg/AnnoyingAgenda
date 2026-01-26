@@ -7,19 +7,24 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
     <Platforms>AnyCPU;x64</Platforms>
+    <ApplicationIcon>Assets\AnnoyingAgenda.ico</ApplicationIcon>
   </PropertyGroup>
 
 	<ItemGroup>
-		<Resource Include="Assets\Buttons\AnnoyingAgenda-Button-Close.png"/>
-		<Resource Include="Assets\Buttons\AnnoyingAgenda-Button-Minimize.png"/>
-		<Resource Include="Assets\Buttons\AnnoyingAgenda-Button-Maximize.png"/>
-		<Resource Include="Assets\Buttons\AnnoyingAgenda-Button-Restore.png"/>
+		<Resource Include="Assets\Buttons\AnnoyingAgenda-Button-Close.png" />
+		<Resource Include="Assets\Buttons\AnnoyingAgenda-Button-Minimize.png" />
+		<Resource Include="Assets\Buttons\AnnoyingAgenda-Button-Maximize.png" />
+		<Resource Include="Assets\Buttons\AnnoyingAgenda-Button-Restore.png" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Remove="Assets\Buttons\AnnoyingAgenda-Button-Close.png"/>
-		<None Remove="Assets\Buttons\AnnoyingAgenda-Button-Minimize.png"/>
-		<None Remove="Assets\Buttons\AnnoyingAgenda-Button-Maximize.png"/>
-		<None Remove="Assets\Buttons\AnnoyingAgenda-Button-Restore.png"/>
+		<None Remove="Assets\Buttons\AnnoyingAgenda-Button-Close.png" />
+		<None Remove="Assets\Buttons\AnnoyingAgenda-Button-Minimize.png" />
+		<None Remove="Assets\Buttons\AnnoyingAgenda-Button-Maximize.png" />
+		<None Remove="Assets\Buttons\AnnoyingAgenda-Button-Restore.png" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Content Include="Assets\AnnoyingAgenda.ico" />
 	</ItemGroup>
 </Project>
