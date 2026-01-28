@@ -28,7 +28,7 @@
       <Button Grid.Column="1" Style="{StaticResource WindowButtonTriggers}" Padding="10,0,10,0" Click="MinimizeButton">
         <Image Source="/Assets/Buttons/AnnoyingAgenda-Button-Minimize.png"></Image>
       </Button>
-      <Button Grid.Column="2" Style="{StaticResource WindowButtonTriggers}" Margin="10,0,10,0" Click="MaximizeButton">
+      <Button Grid.Column="2" Style="{StaticResource WindowButtonTriggers}" Margin="10,0,10,0" Click="MaximizeButton" x:Name="MaximizeBtn">
         <Image Source="/Assets/Buttons/AnnoyingAgenda-Button-Maximize.png"></Image>
       </Button>
       <Button Grid.Column="3" Style="{StaticResource WindowButtonTriggers}" Padding="10,0,10,0" Click="CloseButton">

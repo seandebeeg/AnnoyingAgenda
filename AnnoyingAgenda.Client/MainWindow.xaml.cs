@@ -1,8 +1,10 @@
-﻿using System.IO;
+﻿using AnnoyingAgenda.Shared;
+using System.IO;
+using System.Text.Json;
 using System.Windows;
 using System.Windows.Input;
-using System.Text.Json;
-using AnnoyingAgenda.Shared;
+using System.Windows.Media.Imaging;
+using System.Windows.Controls;
 
 namespace AnnoyingAgenda.Client
 {
@@ -44,8 +46,16 @@ namespace AnnoyingAgenda.Client
 
     private void MaximizeButton(object sender, RoutedEventArgs e)
     {
-      if (this.WindowState == WindowState.Normal) this.WindowState = WindowState.Maximized;
-      else this.WindowState = WindowState.Normal;
+      if (this.WindowState == WindowState.Normal)
+      {
+        this.WindowState = WindowState.Maximized;
+        MaximizeBtn.Content = new Image { Source = new BitmapImage(new Uri("\\Assets\\Buttons\\AnnoyingAgenda-Button-Restore.png", UriKind.Relative)) };
+      }
+      else 
+      {
+        this.WindowState = WindowState.Normal;
+        MaximizeBtn.Content = new Image { Source = new BitmapImage(new Uri("\\Assets\\Buttons\\AnnoyingAgenda-Button-Maximize.png", UriKind.Relative)) };
+      }
     }
   }
 }
