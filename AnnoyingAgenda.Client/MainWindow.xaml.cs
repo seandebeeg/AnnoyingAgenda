@@ -31,5 +31,21 @@ namespace AnnoyingAgenda.Client
         File.WriteAllText(JsonFilePath, JsonSerializer.Serialize(new ToDoListCollection()));
       }
     }
+
+    private void CloseButton(object sender, RoutedEventArgs e)
+    {
+      Application.Current.Shutdown();
+    }
+
+    private void MinimizeButton(object sender, RoutedEventArgs e)
+    {
+      this.WindowState = WindowState.Minimized;
+    }
+
+    private void MaximizeButton(object sender, RoutedEventArgs e)
+    {
+      if (this.WindowState == WindowState.Normal) this.WindowState = WindowState.Maximized;
+      else this.WindowState = WindowState.Normal;
+    }
   }
 }

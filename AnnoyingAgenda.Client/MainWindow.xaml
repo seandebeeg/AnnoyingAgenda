@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:AnnoyingAgenda.Client"
         mc:Ignorable="d"
         WindowStyle="None"
+        Loaded="Window_Loaded"
         Title="Annoying Agenda" Height="450" Width="800"
         MinHeight="300" MinWidth="475">
   <Grid>
@@ -13,9 +14,28 @@
       <RowDefinition Height="32"/>
       <RowDefinition Height="*"/>
     </Grid.RowDefinitions>
-    
-    <Border Grid.Row="0" Opacity="0" MouseDown="DragWindow" x:Name="DragButton" Background="Transparent"/>
 
+    <Grid Grid.Row="0">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*"/>
+        <ColumnDefinition Width="48"/>
+        <ColumnDefinition Width="48"/>
+        <ColumnDefinition Width="48"/>
+      </Grid.ColumnDefinitions>
+
+      <Border Grid.Row="0" Opacity="0" MouseDown="DragWindow" x:Name="DragButton" Background="Transparent"/>
+      
+      <Button Grid.Column="1" Style="{StaticResource WindowButtonTriggers}" Padding="10,0,10,0" Click="MinimizeButton">
+        <Image Source="/Assets/Buttons/AnnoyingAgenda-Button-Minimize.png"></Image>
+      </Button>
+      <Button Grid.Column="2" Style="{StaticResource WindowButtonTriggers}" Margin="10,0,10,0" Click="MaximizeButton">
+        <Image Source="/Assets/Buttons/AnnoyingAgenda-Button-Maximize.png"></Image>
+      </Button>
+      <Button Grid.Column="3" Style="{StaticResource WindowButtonTriggers}" Padding="10,0,10,0" Click="CloseButton">
+        <Image Source="/Assets/Buttons/AnnoyingAgenda-Button-Close.png"></Image>
+      </Button>
+    </Grid>
+    
     <Frame x:Name="MainNavigation" NavigationUIVisibility="Hidden" Grid.Row="1"/>
   </Grid>
 </Window>
