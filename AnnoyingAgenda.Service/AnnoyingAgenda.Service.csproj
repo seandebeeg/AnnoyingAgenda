@@ -11,4 +11,6 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.1" />
   </ItemGroup>
+
+  <Import Project="..\AnnoyingAgenda.Shared\AnnoyingAgenda.Shared.projitems" Label="Shared" />
 </Project>

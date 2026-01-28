@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnnoyingAgenda.Client", "An
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnnoyingAgenda.Service", "AnnoyingAgenda.Service\AnnoyingAgenda.Service.csproj", "{75C2069D-1285-420F-93AE-F9B494594A92}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "AnnoyingAgenda.Shared", "AnnoyingAgenda.Shared\AnnoyingAgenda.Shared.shproj", "{3706EE67-D74D-4CA1-8D19-4DC414C45580}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,5 +39,10 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FB135412-A04A-47DC-BCC3-F783720E7DE2}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		AnnoyingAgenda.Shared\AnnoyingAgenda.Shared.projitems*{3706ee67-d74d-4ca1-8d19-4dc414c45580}*SharedItemsImports = 13
+		AnnoyingAgenda.Shared\AnnoyingAgenda.Shared.projitems*{53e3a8b3-c8b4-4d12-be8f-c3563632b0c6}*SharedItemsImports = 5
+		AnnoyingAgenda.Shared\AnnoyingAgenda.Shared.projitems*{75c2069d-1285-420f-93ae-f9b494594a92}*SharedItemsImports = 5
 	EndGlobalSection
 EndGlobal

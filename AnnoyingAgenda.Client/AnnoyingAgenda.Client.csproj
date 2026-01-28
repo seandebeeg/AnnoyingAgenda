@@ -27,4 +27,6 @@
 	<ItemGroup>
 	  <Content Include="Assets\AnnoyingAgenda.ico" />
 	</ItemGroup>
+
+	<Import Project="..\AnnoyingAgenda.Shared\AnnoyingAgenda.Shared.projitems" Label="Shared" />
 </Project>
