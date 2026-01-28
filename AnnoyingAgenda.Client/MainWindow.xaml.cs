@@ -1,7 +1,8 @@
-﻿using System.Windows;
+﻿using System.IO;
+using System.Windows;
 using System.Windows.Input;
-using System.Windows.Media.Imaging;
-using System.Windows.Controls;
+using System.Text.Json;
+using AnnoyingAgenda.Shared;
 
 namespace AnnoyingAgenda.Client
 {
@@ -18,6 +19,16 @@ namespace AnnoyingAgenda.Client
       if (e.ChangedButton == MouseButton.Left)
       {
         this.DragMove();
+      }
+    }
+
+    private void Window_Loaded(object sender, RoutedEventArgs e)
+    {
+      var JsonFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Annoying Agenda", "aa.json");
+
+      if (!File.Exists(JsonFilePath) || string.IsNullOrWhiteSpace(File.ReadAllText(JsonFilePath)))
+      {
+        File.WriteAllText(JsonFilePath, JsonSerializer.Serialize(new ToDoListCollection()));
       }
     }
   }

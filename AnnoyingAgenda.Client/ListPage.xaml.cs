@@ -1,28 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using AnnoyingAgenda.Shared;
+using System.Text.Json;
+using System.IO;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace AnnoyingAgenda.Client
 {
-    /// <summary>
-    /// Interaction logic for ListPage.xaml
-    /// </summary>
-    public partial class ListPage : Page
+  public partial class ListPage : Page
+  {
+    ToDoListCollection? AllLists;
+    public ListPage()
     {
-        public ListPage()
-        {
-            InitializeComponent();
-        }
+      InitializeComponent();
+
+      var JsonFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Annoying Agenda", "aa.json");
+
+      if (!File.Exists(JsonFilePath) || string.IsNullOrWhiteSpace(File.ReadAllText(JsonFilePath)))
+      {
+        File.WriteAllText(JsonFilePath, JsonSerializer.Serialize(new ToDoListCollection()));
+      }
+      else
+      {
+        AllLists = JsonSerializer.Deserialize<ToDoListCollection>(File.ReadAllText(JsonFilePath));
+      }
     }
+  }
 }
