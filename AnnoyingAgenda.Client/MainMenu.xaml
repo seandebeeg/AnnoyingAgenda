@@ -9,11 +9,13 @@
       Title="MainMenu">
 
     <Grid>
-    <Border Grid.Row="1" BorderBrush="Gray" CornerRadius="10" BorderThickness="1">
+    <Border Grid.Row="1" BorderBrush="LightGray" CornerRadius="10" BorderThickness="1">
       <Grid>
         <TextBlock Text="Welcome" HorizontalAlignment="Center" FontSize="50" FontWeight="UltraBold" FontFamily="Tw Cen MT Condensed"/>
-        <Button Height="100" Width="200" HorizontalAlignment="Right" Content="Settings" FontSize="30" FontWeight="UltraBold" FontFamily="Tw Cen MT Condensed"/>
-        <Button Height="100" Width="200" HorizontalAlignment="Left" Content="Lists" FontSize="30" FontWeight="UltraBold" FontFamily="Tw Cen MT Condensed"/>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+          <Button Height="100" Width="200" HorizontalAlignment="Right" Content="Settings" FontSize="30" FontWeight="UltraBold" FontFamily="Tw Cen MT Condensed" Margin="0,0,20,0" Style="{StaticResource WindowButtonTriggers}" Background="LightGray"/>
+          <Button Height="100" Width="200" HorizontalAlignment="Left" Content="Lists" FontSize="30" FontWeight="UltraBold" FontFamily="Tw Cen MT Condensed" Margin="20,0,0,0" Style="{StaticResource WindowButtonTriggers}" Background="LightGray"/>
+        </StackPanel>
       </Grid>
     </Border>
   </Grid>

@@ -18,12 +18,12 @@
       </Setter>
       <Style.Triggers>
         <Trigger Property="IsMouseOver" Value="True">
-          <Setter Property="Opacity" Value="0.8"/>
+          <Setter Property="Opacity" Value="0.7"/>
           <Setter Property="Background" Value="Transparent"/>
           <Setter Property="BorderBrush" Value="Transparent"/>
         </Trigger>
         <Trigger Property="IsPressed" Value="True">
-          <Setter Property="Opacity" Value="0.6"/>
+          <Setter Property="Opacity" Value="0.5"/>
           <Setter Property="Background" Value="Transparent"/>
           <Setter Property="BorderBrush" Value="Transparent"/>
         </Trigger>
