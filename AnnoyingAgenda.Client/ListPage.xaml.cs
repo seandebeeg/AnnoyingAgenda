@@ -7,7 +7,7 @@ namespace AnnoyingAgenda.Client
 {
   public partial class ListPage : Page
   {
-    ToDoListCollection? AllLists;
+    List<ToDoList>? AllLists = [];
     public ListPage()
     {
       InitializeComponent();
@@ -16,11 +16,11 @@ namespace AnnoyingAgenda.Client
 
       if (!File.Exists(JsonFilePath) || string.IsNullOrWhiteSpace(File.ReadAllText(JsonFilePath)))
       {
-        File.WriteAllText(JsonFilePath, JsonSerializer.Serialize(new ToDoListCollection()));
+        File.WriteAllText(JsonFilePath, JsonSerializer.Serialize(new List<ToDoList>()));
       }
       else
       {
-        AllLists = JsonSerializer.Deserialize<ToDoListCollection>(File.ReadAllText(JsonFilePath));
+        AllLists = JsonSerializer.Deserialize<List<ToDoList>>(File.ReadAllText(JsonFilePath));
       }
     }
   }

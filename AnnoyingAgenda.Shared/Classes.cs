@@ -4,10 +4,6 @@ using System.Text;
 
 namespace AnnoyingAgenda.Shared
 {
-  class ToDoListCollection
-  {
-    public List<ToDoList>? AllToDoLists { get; set; }
-  }
   class ToDoList
   {
     public required string Name { get; set; }
