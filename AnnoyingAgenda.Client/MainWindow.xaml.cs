@@ -13,7 +13,7 @@ namespace AnnoyingAgenda.Client
     public MainWindow()
     {
       InitializeComponent();
-      MainNavigation.Navigate(new MainMenu());
+      MainNavigation.Navigate(new MainMenu(this));
     }
 
     private void DragWindow(object sender, MouseButtonEventArgs e)
@@ -30,7 +30,7 @@ namespace AnnoyingAgenda.Client
 
       if (!File.Exists(JsonFilePath) || string.IsNullOrWhiteSpace(File.ReadAllText(JsonFilePath)))
       {
-        File.WriteAllText(JsonFilePath, JsonSerializer.Serialize(new ToDoListCollection()));
+        File.WriteAllText(JsonFilePath, JsonSerializer.Serialize(new List<ToDoList>()));
       }
     }
 

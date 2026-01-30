@@ -1,6 +1,8 @@
 ﻿using AnnoyingAgenda.Shared;
 using System.Text.Json;
 using System.IO;
+using System.Windows.Media;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace AnnoyingAgenda.Client
@@ -24,6 +26,24 @@ namespace AnnoyingAgenda.Client
       else
       {
         AllLists = JsonSerializer.Deserialize<List<ToDoList>>(File.ReadAllText(JsonFilePath));
+
+        foreach(ToDoList List in AllLists)
+        {
+          Button ListSelectButton = new()
+          {
+            Content = List.Name + "\n" + List.Purpose,
+            Height = 150,
+            Width = 150,
+            FontSize = 30,
+            FontFamily = new FontFamily("Tw Cen MT Condensed"),
+            Style = (Style)this.FindResource("WindowButtonTriggers"),
+            Background = Brushes.LightGray,
+            HorizontalAlignment = HorizontalAlignment.Center,
+          };
+
+          ListSelectPanel.Children.Add(ListSelectButton);
+        }
+      }
       }
     }
   }
