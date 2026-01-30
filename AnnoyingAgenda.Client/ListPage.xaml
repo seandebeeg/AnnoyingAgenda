@@ -9,6 +9,6 @@
       Title="ListPage">
 
     <Grid>
-        
-    </Grid>
+    <TextBlock Text="Lists" FontSize="75" HorizontalAlignment="Center" FontFamily="Tw Cen MT Condensed"/>
+  </Grid>
 </Page>

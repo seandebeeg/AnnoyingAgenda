@@ -7,10 +7,13 @@ namespace AnnoyingAgenda.Client
 {
   public partial class ListPage : Page
   {
-    List<ToDoList>? AllLists = [];
-    public ListPage()
+    private MainWindow ParentWindow;
+    private List<ToDoList>? AllLists = [];
+    public ListPage(MainWindow _parentWindow)
     {
       InitializeComponent();
+
+      ParentWindow = _parentWindow;
 
       var JsonFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Annoying Agenda", "aa.json");
 

@@ -15,14 +15,14 @@ using System.Windows.Shapes;
 
 namespace AnnoyingAgenda.Client
 {
-    /// <summary>
-    /// Interaction logic for Settings.xaml
-    /// </summary>
-    public partial class Settings : Page
+  public partial class SettingsPage : Page
+  {
+    MainWindow ParentWindow;
+    public SettingsPage(MainWindow _parentWindow)
     {
-        public Settings()
-        {
-            InitializeComponent();
-        }
+      InitializeComponent();
+
+      ParentWindow = _parentWindow;
     }
+  }
 }
