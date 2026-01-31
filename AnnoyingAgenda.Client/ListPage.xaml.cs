@@ -44,7 +44,22 @@ namespace AnnoyingAgenda.Client
           ListSelectPanel.Children.Add(ListSelectButton);
         }
       }
-      }
+    }
+
+    private void NewListButton(object sender, RoutedEventArgs e)
+    {
+      NewListPopup.IsOpen = true;
+    }
+
+    private void CancelPopupButton(object sender, RoutedEventArgs e)
+    {
+      NewListPopup.IsOpen = false;
+    }
+
+    private void CreatePopupButton(object sender, RoutedEventArgs e)
+    {
+      ToDoList NewToDoList = new ToDoList(ListName.Text, ListPurpose.Text);
+      ParentWindow.MainNavigation.Navigate(new ListEditor(ParentWindow, NewToDoList));
     }
   }
 }

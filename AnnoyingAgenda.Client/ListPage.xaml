@@ -8,12 +8,26 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="ListPage">
 
-    <Grid>
+  <Grid>
     <Grid.RowDefinitions>
       <RowDefinition Height="100"/>
       <RowDefinition Height="*"/>
     </Grid.RowDefinitions>
     <TextBlock Text="Lists" FontSize="75" Grid.Row="0" HorizontalAlignment="Center" FontFamily="Tw Cen MT Condensed"/>
+    <Popup IsOpen="False" StaysOpen="True" Height="200" Width="450" Grid.Row="1" Placement="Center" x:Name="NewListPopup">
+      <Border BorderBrush="LightGray" BorderThickness="3" Background="White">
+        <StackPanel Background="White">
+          <TextBlock Text="Name" FontFamily="Tw Cen MT Condensed" HorizontalAlignment="Center" FontSize="30"/>
+          <TextBox MaxLines="1" FontFamily="Tw Cen MT Condensed" x:Name="ListName" FontSize="30"/>
+          <TextBlock Text="Purpose" FontFamily="Tw Cen MT Condensed" HorizontalAlignment="Center" FontSize="30"/>
+          <TextBox MaxLines="1" FontFamily="Tw Cen MT Condensed" x:Name="ListPurpose" FontSize="30"/>
+          <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20,0,0">
+            <Button Content="Create" Click="CreatePopupButton" Margin="0,0,10,0" Style="{StaticResource WindowButtonTriggers}" Width="50"  Height="30" Background="LightGray"/>
+            <Button Content="Cancel" Click="CancelPopupButton" Margin="10,0,0,0" Style="{StaticResource WindowButtonTriggers}" Width="50"  Height="30" Background="LightGray"/>
+          </StackPanel>
+        </StackPanel>
+      </Border>
+    </Popup>
     <Grid Grid.Row="1">
       <Grid.ColumnDefinitions>
         <ColumnDefinition Width="*"/>
