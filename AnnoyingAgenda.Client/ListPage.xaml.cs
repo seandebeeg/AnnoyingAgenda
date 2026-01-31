@@ -31,14 +31,15 @@ namespace AnnoyingAgenda.Client
         {
           Button ListSelectButton = new()
           {
-            Content = List.Name + "\n" + List.Purpose,
-            Height = 150,
-            Width = 150,
+            Content = List.Name + " - " + List.Purpose,
+            Height = 60,
             FontSize = 30,
             FontFamily = new FontFamily("Tw Cen MT Condensed"),
             Style = (Style)this.FindResource("WindowButtonTriggers"),
             Background = Brushes.LightGray,
-            HorizontalAlignment = HorizontalAlignment.Center,
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            HorizontalContentAlignment = HorizontalAlignment.Stretch, 
+            Margin = new Thickness(0,0,0,5)
           };
 
           ListSelectButton.Click += OpenList;
@@ -52,7 +53,7 @@ namespace AnnoyingAgenda.Client
       Button ListButton = (Button)e.Source;
 
       string NameAndPurpose = (string)ListButton.Content;
-      string Name = NameAndPurpose.Split("\n")[0];
+      string Name = NameAndPurpose.Split("-")[0];
 
       ToDoList SelectedList = AllLists.Find(L => L.Name == Name);
 

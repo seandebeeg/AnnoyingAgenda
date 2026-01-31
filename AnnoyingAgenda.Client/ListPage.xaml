@@ -10,7 +10,7 @@
 
   <Grid>
     <Grid.RowDefinitions>
-      <RowDefinition Height="100"/>
+      <RowDefinition Height="80"/>
       <RowDefinition Height="*"/>
     </Grid.RowDefinitions>
     <TextBlock Text="Lists" FontSize="75" Grid.Row="0" HorizontalAlignment="Center" FontFamily="Tw Cen MT Condensed"/>
@@ -29,14 +29,14 @@
       </Border>
     </Popup>
     <Grid Grid.Row="1">
-      <Grid.ColumnDefinitions>
-        <ColumnDefinition Width="*"/>
-        <ColumnDefinition Width="*"/>
-      </Grid.ColumnDefinitions>
+      <Grid.RowDefinitions>
+        <RowDefinition Height="2*"/>
+        <RowDefinition Height="*"/>
+      </Grid.RowDefinitions>
       <ScrollViewer ScrollViewer.VerticalScrollBarVisibility="Hidden">
-        <StackPanel Grid.Column="0" x:Name="ListSelectPanel" CanVerticallyScroll="True"></StackPanel>
+        <StackPanel Grid.Row="0" x:Name="ListSelectPanel" CanVerticallyScroll="True" Orientation="Vertical"></StackPanel>
       </ScrollViewer>
-      <Button Grid.Column="1" Height="75" Width="200" Style="{StaticResource WindowButtonTriggers}" FontFamily="Tw Cen MT Condensed" FontSize="45" HorizontalAlignment="Left" Background="LightGray" Click="NewListButton">New List</Button>
+      <Button Grid.Row="1" Height="75" Width="200" Style="{StaticResource WindowButtonTriggers}" FontFamily="Tw Cen MT Condensed" FontSize="45" Background="LightGray" Click="NewListButton" HorizontalAlignment="Center" VerticalAlignment="Top">New List</Button>
     </Grid>
   </Grid>
 </Page>
