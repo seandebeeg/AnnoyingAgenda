@@ -41,9 +41,22 @@ namespace AnnoyingAgenda.Client
             HorizontalAlignment = HorizontalAlignment.Center,
           };
 
+          ListSelectButton.Click += OpenList;
           ListSelectPanel.Children.Add(ListSelectButton);
         }
       }
+    }
+
+    private void OpenList(object sender, RoutedEventArgs e)
+    {
+      Button ListButton = (Button)e.Source;
+
+      string NameAndPurpose = (string)ListButton.Content;
+      string Name = NameAndPurpose.Split("\n")[0];
+
+      ToDoList SelectedList = AllLists.Find(L => L.Name == Name);
+
+      ParentWindow.MainNavigation.Navigate(new ListEditor(ParentWindow, SelectedList));
     }
 
     private void NewListButton(object sender, RoutedEventArgs e)
@@ -58,8 +71,15 @@ namespace AnnoyingAgenda.Client
 
     private void CreatePopupButton(object sender, RoutedEventArgs e)
     {
-      ToDoList NewToDoList = new ToDoList(ListName.Text, ListPurpose.Text);
-      ParentWindow.MainNavigation.Navigate(new ListEditor(ParentWindow, NewToDoList));
+      if (string.IsNullOrWhiteSpace(ListName.Text) || string.IsNullOrEmpty(ListPurpose.Text))
+      {
+        MessageBox.Show("Name or Purpose cannot be empty", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+      }
+      else
+      {
+        ToDoList NewToDoList = new ToDoList(ListName.Text, ListPurpose.Text);
+        ParentWindow.MainNavigation.Navigate(new ListEditor(ParentWindow, NewToDoList));
+      }
     }
   }
 }
