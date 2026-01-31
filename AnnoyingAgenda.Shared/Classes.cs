@@ -1,17 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace AnnoyingAgenda.Shared
+﻿namespace AnnoyingAgenda.Shared
 {
-  class ToDoList
+  public class ToDoList
   {
-    public required string Name { get; set; }
-    public required string Purpose { get; set; }
-    public required List<ToDoItem> ListItems {get; set;}
+    public ToDoList(string name, string purpose)
+    {
+      this.Name = name;
+      this.Purpose = purpose;
+      this.ListItems = new List<ToDoItem>();
+    }
+
+    public string Name { get; set; }
+    public string Purpose { get; set; }
+    public List<ToDoItem> ListItems {get; set;}
   }
 
-  class ToDoItem
+  public class ToDoItem
   {
     public required string Name { get; set; }
     public DateTime DueDate {get; set;}
