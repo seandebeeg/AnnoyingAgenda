@@ -29,6 +29,15 @@ namespace AnnoyingAgenda.Client
 
         foreach(ToDoList List in AllLists)
         {
+          Border ListSelectButtonBorder = new()
+          {
+            CornerRadius = new CornerRadius(10),
+            BorderThickness = new Thickness(5),
+            BorderBrush = Brushes.DarkGray,
+            Margin = new Thickness(0, 0, 0, 5),
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+          };
+
           Button ListSelectButton = new()
           {
             Content = List.Name + " - " + List.Purpose,
@@ -37,13 +46,13 @@ namespace AnnoyingAgenda.Client
             FontFamily = new FontFamily("Tw Cen MT Condensed"),
             Style = (Style)this.FindResource("WindowButtonTriggers"),
             Background = Brushes.LightGray,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            HorizontalContentAlignment = HorizontalAlignment.Stretch, 
-            Margin = new Thickness(0,0,0,5)
+            HorizontalContentAlignment = HorizontalAlignment.Stretch
           };
 
           ListSelectButton.Click += OpenList;
-          ListSelectPanel.Children.Add(ListSelectButton);
+          ListSelectButtonBorder.Child = ListSelectButton;
+
+          ListSelectPanel.Children.Add(ListSelectButtonBorder);
         }
       }
     }
@@ -68,6 +77,11 @@ namespace AnnoyingAgenda.Client
     private void CancelPopupButton(object sender, RoutedEventArgs e)
     {
       NewListPopup.IsOpen = false;
+    }
+
+    private void HomeMenuButton(object sender, RoutedEventArgs e)
+    {
+      ParentWindow.MainNavigation.Navigate(new MainMenu(ParentWindow));
     }
 
     private void CreatePopupButton(object sender, RoutedEventArgs e)

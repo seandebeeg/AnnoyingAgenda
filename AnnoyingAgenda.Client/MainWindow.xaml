@@ -8,7 +8,7 @@
         WindowStyle="None"
         Loaded="Window_Loaded"
         Title="Annoying Agenda" Height="450" Width="800"
-        MinHeight="300" MinWidth="475">
+        MinHeight="340" MinWidth="780">
   <Grid>
     <Grid.RowDefinitions>
       <RowDefinition Height="32"/>
