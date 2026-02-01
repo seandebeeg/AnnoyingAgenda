@@ -7,8 +7,14 @@
         mc:Ignorable="d"
         WindowStyle="None"
         Loaded="Window_Loaded"
-        Title="Annoying Agenda" Height="450" Width="800"
+        Height="450" Width="800"
         MinHeight="340" MinWidth="780">
+  <Window.Title>
+    <MultiBinding StringFormat="{}{0} - {1}">
+      <Binding Path="WindowTitle"/>
+      <Binding Path="PageTitle"/>
+    </MultiBinding>
+  </Window.Title>
   <Grid>
     <Grid.RowDefinitions>
       <RowDefinition Height="32"/>
@@ -23,8 +29,12 @@
         <ColumnDefinition Width="48"/>
       </Grid.ColumnDefinitions>
 
-      <Border Grid.Row="0" Opacity="0" MouseDown="DragWindow" x:Name="DragButton" Background="Transparent"/>
-      
+      <Border Grid.Column="0" Opacity="1" MouseDown="DragWindow" x:Name="DragButton" Background="White">
+        <StackPanel Orientation="Horizontal">
+          <TextBlock Text="{Binding Title, RelativeSource={RelativeSource AncestorType=Window}}" FontSize="20" FontFamily="Tw Cen MT Condensed" Foreground="Black" Margin="20,0,0,0"/>
+        </StackPanel>
+      </Border>
+
       <Button Grid.Column="1" Style="{StaticResource WindowButtonTriggers}" Padding="10,0,10,0" Click="MinimizeButton">
         <Image Source="/Assets/Buttons/AnnoyingAgenda-Button-Minimize.png"></Image>
       </Button>

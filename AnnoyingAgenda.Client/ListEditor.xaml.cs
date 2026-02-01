@@ -17,6 +17,7 @@ namespace AnnoyingAgenda.Client
     {
       ParentWindow = _parentWindow;
       CurrentList = _currentList;
+      ParentWindow.PageTitle = CurrentList.Name;
       InitializeComponent();
 
       var JsonFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Annoying Agenda", "aa.json");

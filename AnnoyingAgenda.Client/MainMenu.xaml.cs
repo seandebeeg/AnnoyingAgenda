@@ -9,6 +9,7 @@ namespace AnnoyingAgenda.Client
     public MainMenu(MainWindow _parentWindow)
     {
       ParentWindow = _parentWindow;
+      ParentWindow.PageTitle = "Main Menu";
       InitializeComponent();
     }
 

@@ -16,6 +16,7 @@ namespace AnnoyingAgenda.Client
       InitializeComponent();
 
       ParentWindow = _parentWindow;
+      ParentWindow.PageTitle = "Lists";
 
       var JsonFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Annoying Agenda", "aa.json");
 
@@ -62,7 +63,7 @@ namespace AnnoyingAgenda.Client
       Button ListButton = (Button)e.Source;
 
       string NameAndPurpose = (string)ListButton.Content;
-      string Name = NameAndPurpose.Split("-")[0];
+      string Name = NameAndPurpose.Split(" - ")[0];
 
       ToDoList SelectedList = AllLists.Find(L => L.Name == Name);
 

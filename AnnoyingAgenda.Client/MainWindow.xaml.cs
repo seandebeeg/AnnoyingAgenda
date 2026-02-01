@@ -5,16 +5,40 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using System.Windows.Controls;
+using System.ComponentModel;
 
 namespace AnnoyingAgenda.Client
 {
-  public partial class MainWindow : Window
+  public partial class MainWindow : Window, INotifyPropertyChanged
   {
+    private string _windowTitle;
+    private string _pageTitle;
+
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    public string WindowTitle { get; set; }
+
+    public string PageTitle
+    {
+      get => _pageTitle;
+      set
+      {
+        if (_pageTitle == value) return;
+        _pageTitle = value;
+        OnPropertyChanged(nameof(PageTitle));
+      }
+    }
+
     public MainWindow()
     {
       InitializeComponent();
       MainNavigation.Navigate(new MainMenu(this));
+      this.DataContext = this;
+      WindowTitle = "Annoying Agenda";
+      PageTitle = "Main Menu";
     }
+
+    private void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
     private void DragWindow(object sender, MouseButtonEventArgs e)
     {
