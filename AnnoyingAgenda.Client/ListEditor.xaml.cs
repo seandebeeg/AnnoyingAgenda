@@ -38,13 +38,15 @@ namespace AnnoyingAgenda.Client
 
       ThicknessAnimation LeftMarginAnimation = new()
       {
-        From = new Thickness(0, 10, 0, 10),
-        To = new Thickness(0, 10, 20, 10),
+        From = new Thickness(0, 0, 0, 10),
+        To = new Thickness(0, 0, 20, 10),
         Duration = TimeSpan.FromMilliseconds(100),
       };
+
       Storyboard.SetTargetProperty(LeftMarginAnimation, new PropertyPath("Margin"));
       Storyboard.SetTarget(LeftMarginAnimation, HoveredButton);
       Storyboard LeftMarginStoryBoard = new();
+
       LeftMarginStoryBoard.Children.Add(LeftMarginAnimation);
       LeftMarginStoryBoard.Begin();
     }
@@ -55,15 +57,31 @@ namespace AnnoyingAgenda.Client
 
       ThicknessAnimation LeftMarginAnimation = new()
       {
-        From = new Thickness(0, 10, 20, 10),
-        To = new Thickness(0, 10, 0, 10),
+        From = new Thickness(0, 0, 20, 10),
+        To = new Thickness(0, 0, 0, 10),
         Duration = TimeSpan.FromMilliseconds(100),
       };
+
       Storyboard.SetTargetProperty(LeftMarginAnimation, new PropertyPath("Margin"));
       Storyboard.SetTarget(LeftMarginAnimation, HoveredButton);
       Storyboard LeftMarginStoryBoard = new();
+
       LeftMarginStoryBoard.Children.Add(LeftMarginAnimation);
       LeftMarginStoryBoard.Begin();
+    }
+
+    private void QuitButton(object sender, RoutedEventArgs e)
+    {
+      MessageBoxResult QuitConfirmation = MessageBox.Show("Any unsaved work will be lost, do you want to proceed?", "Quit?", MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+      if(QuitConfirmation == MessageBoxResult.Yes)
+      {
+        ParentWindow.MainNavigation.Navigate(new ListPage(ParentWindow));
+      }
+      else
+      {
+        return;
+      }
     }
   }
 }
