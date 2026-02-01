@@ -15,6 +15,10 @@
 		<Resource Include="Assets\Buttons\AnnoyingAgenda-Button-Minimize.png" />
 		<Resource Include="Assets\Buttons\AnnoyingAgenda-Button-Maximize.png" />
 		<Resource Include="Assets\Buttons\AnnoyingAgenda-Button-Restore.png" />
+		<Resource Include="Assets\Buttons\AnnoyingAgenda-Button-Undo.png" />
+		<Resource Include="Assets\Buttons\AnnoyingAgenda-Button-Redo.png" />
+		<Resource Include="Assets\Buttons\AnnoyingAgenda-Button-Add.png" />
+		<Resource Include="Assets\Buttons\AnnoyingAgenda-Button-Delete.png" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -22,6 +26,10 @@
 		<None Remove="Assets\Buttons\AnnoyingAgenda-Button-Minimize.png" />
 		<None Remove="Assets\Buttons\AnnoyingAgenda-Button-Maximize.png" />
 		<None Remove="Assets\Buttons\AnnoyingAgenda-Button-Restore.png" />
+		<None Remove="Assets\Buttons\AnnoyingAgenda-Button-Undo.png"/>
+		<None Remove="Assets\Buttons\AnnoyingAgenda-Button-Redo.png"/>
+		<None Remove="Assets\Buttons\AnnoyingAgenda-Button-Add.png"/>
+		<None Remove="Assets\Buttons\AnnoyingAgenda-Button-Delete.png"/>
 	</ItemGroup>
 
 	<ItemGroup>
