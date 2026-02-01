@@ -16,7 +16,14 @@
 
   public class ToDoItem
   {
-    public required string Name { get; set; }
+    public ToDoItem(string name, DateTime duedate)
+    {
+      Name = name;
+      DueDate = duedate;
+      IsComplete = false;
+    }
+
+    public string Name { get; set; }
     public DateTime DueDate {get; set;}
     public bool IsComplete { get; set; }
   }

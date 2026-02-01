@@ -15,6 +15,28 @@
       <ColumnDefinition Width="2*"/>
     </Grid.ColumnDefinitions>
 
+    <Popup Height="300" Width="450" IsOpen="True" Placement="Center" x:Name="NewEventPopup" StaysOpen="True">
+      <Border BorderBrush="LightGray" BorderThickness="3" Background="White">
+        <StackPanel>
+          <TextBlock Text="Event Name" HorizontalAlignment="Center" FontSize="30" FontFamily="Tw Cen MT Condensed"/>
+          <TextBox  x:Name="EventNameBox" Height="30" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontFamily="Tw Cen MT Condensed" FontSize="20"/>
+          <TextBlock Text="Reminder Date" HorizontalAlignment="Center" FontSize="30" FontFamily="Tw Cen MT Condensed"/>
+          <DatePicker FontFamily="Tw Cen MT Condensed" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="30" FontSize="20" x:Name="EventDatePicker"></DatePicker>
+          <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+            <TextBlock Text="Hour" FontFamily="Tw Cen MT Condensed" FontSize="30"/>
+            <ComboBox x:Name="HourSelector" FontFamily="Tw Cen MT" FontSize="30" Height="40" Width="80"></ComboBox>
+            <TextBlock Text="Minute" FontFamily="Tw Cen MT Condensed" FontSize="30"/>
+            <ComboBox x:Name="MinuteSelector" FontFamily="Tw Cen MT" FontSize="30" Height="40" Width="80"></ComboBox>
+          </StackPanel>
+          <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20,0,0">
+            <Button Content="Create" Click="CreateEvent" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,10,0" Style="{StaticResource WindowButtonTriggers}" Width="50"  Height="30" Background="LightGray"/>
+            <Button Content="Cancel" Click="CancelClick" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,0,0,0" Style="{StaticResource WindowButtonTriggers}" Width="50"  Height="30" Background="LightGray"/>
+          </StackPanel>
+          
+        </StackPanel>
+      </Border>
+    </Popup>
+
     <StackPanel Grid.Column="0" x:Name="TaskPanel">
       
     </StackPanel>
@@ -25,7 +47,7 @@
     </StackPanel>
     <Border Grid.Column="1" BorderBrush="LightGray" CornerRadius="10" BorderThickness="1" Margin="0,0,10,3">
       <StackPanel VerticalAlignment="Center" Margin="0,0,0,40" CanVerticallyScroll="True">
-        <Button Style="{StaticResource WindowButtonTriggers}" Content="New Event" FontFamily="Tw Cen MT Condensed" FontSize="40" Height="40" Width="150" Background="LightGray" Margin="0,0,0,10" MouseEnter="MouseOverAnimation" MouseLeave="MouseLeaveAnimation"/>
+        <Button Style="{StaticResource WindowButtonTriggers}" Content="New Event" Click="CreateNewEvent" FontFamily="Tw Cen MT Condensed" FontSize="40" Height="40" Width="150" Background="LightGray" Margin="0,0,0,10" MouseEnter="MouseOverAnimation" MouseLeave="MouseLeaveAnimation"/>
         <Button Style="{StaticResource WindowButtonTriggers}" Content="Delete Event" FontFamily="Tw Cen MT Condensed" FontSize="40" Height="40" Width="150" Background="LightGray" Margin="0,0,0,10" MouseEnter="MouseOverAnimation" MouseLeave="MouseLeaveAnimation"/>
         <Button Style="{StaticResource WindowButtonTriggers}" Content="Edit Event" FontFamily="Tw Cen MT Condensed" FontSize="40" Height="40" Width="150" Background="LightGray" Margin="0,0,0,10" MouseEnter="MouseOverAnimation" MouseLeave="MouseLeaveAnimation"/>
         <Button Style="{StaticResource WindowButtonTriggers}" Content="Search" FontFamily="Tw Cen MT Condensed" FontSize="40" Height="40" Width="150" Background="LightGray" Margin="0,0,0,10" MouseEnter="MouseOverAnimation" MouseLeave="MouseLeaveAnimation"/>
