@@ -11,7 +11,6 @@ namespace AnnoyingAgenda.Client
 {
   public partial class MainWindow : Window, INotifyPropertyChanged
   {
-    private string _windowTitle;
     private string _pageTitle;
 
     public event PropertyChangedEventHandler? PropertyChanged;
@@ -54,7 +53,7 @@ namespace AnnoyingAgenda.Client
 
       if (!File.Exists(JsonFilePath) || string.IsNullOrWhiteSpace(File.ReadAllText(JsonFilePath)))
       {
-        File.WriteAllText(JsonFilePath, JsonSerializer.Serialize(new List<ToDoList>()));
+        File.WriteAllText(JsonFilePath, JsonSerializer.Serialize(new List<ToDoList>(), new JsonSerializerOptions() { WriteIndented = true }));
       }
     }
 

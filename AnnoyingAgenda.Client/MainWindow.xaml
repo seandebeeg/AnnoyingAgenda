@@ -10,7 +10,7 @@
         Height="450" Width="800"
         MinHeight="340" MinWidth="780">
   <Window.Title>
-    <MultiBinding StringFormat="{}{0} - {1}">
+    <MultiBinding StringFormat="{}{1} - {0}">
       <Binding Path="WindowTitle"/>
       <Binding Path="PageTitle"/>
     </MultiBinding>

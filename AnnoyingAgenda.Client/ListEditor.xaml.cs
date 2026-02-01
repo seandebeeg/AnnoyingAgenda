@@ -5,6 +5,7 @@ using System.Text.Json;
 using System.Windows.Input;
 using System.Windows;
 using System.Windows.Media.Animation;
+using System.Windows.Media;
 
 namespace AnnoyingAgenda.Client
 {
@@ -24,7 +25,7 @@ namespace AnnoyingAgenda.Client
 
       if (!File.Exists(JsonFilePath) || string.IsNullOrWhiteSpace(File.ReadAllText(JsonFilePath)))
       {
-        File.WriteAllText(JsonFilePath, JsonSerializer.Serialize(new List<ToDoList>()));
+        File.WriteAllText(JsonFilePath, JsonSerializer.Serialize(new List<ToDoList>(), new JsonSerializerOptions(){ WriteIndented = true}));
       }
       else
       {
@@ -82,6 +83,48 @@ namespace AnnoyingAgenda.Client
       else
       {
         return;
+      }
+    }
+
+    private void Page_Loaded(object sender, RoutedEventArgs e)
+    {
+      try
+      {
+        if(CurrentList.ListItems.Count >= 1)
+        {
+          foreach (ToDoItem Item in CurrentList.ListItems)
+          {
+            Button TaskButton = new()
+            {
+              Content = Item.Name + " Due: " + Item.DueDate.ToString("MM/dd/yyyy-hh:mm"),
+              Height = 40,
+              HorizontalAlignment = HorizontalAlignment.Stretch,
+              FontSize = 30,
+              FontFamily = new FontFamily("Tw Cen MT Condensed"),
+              Background = Brushes.LightGray,
+              Margin = new Thickness(0,0,0,5),
+              Style = (Style)this.FindResource("WindowButtonTriggers")
+            };
+
+            TaskPanel.Children.Add(TaskButton);
+          }
+        }
+        else
+        {
+          TextBlock NoTasksMessage = new()
+          {
+            Text = "No Tasks :)",
+            FontFamily = new FontFamily("Tw Cen MT Condensed"),
+            FontSize = 35,
+            HorizontalAlignment = HorizontalAlignment.Center
+          };
+
+          TaskPanel.Children.Add(NoTasksMessage);
+        }
+      }
+      catch (Exception)
+      {
+        MessageBox.Show("An error occurred when loading your to do list","Error",MessageBoxButton.OK, MessageBoxImage.Exclamation);
       }
     }
   }

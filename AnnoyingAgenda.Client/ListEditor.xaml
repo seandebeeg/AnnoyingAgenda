@@ -6,7 +6,8 @@
       xmlns:local="clr-namespace:AnnoyingAgenda.Client"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="ListEditor">
+      Title="ListEditor"
+      Loaded="Page_Loaded">
 
   <Grid>
     <Grid.ColumnDefinitions>
@@ -14,25 +15,26 @@
       <ColumnDefinition Width="2*"/>
     </Grid.ColumnDefinitions>
 
-    <Grid>
-
-    </Grid>
+    <StackPanel Grid.Column="0" x:Name="TaskPanel">
+      
+    </StackPanel>
 
     <StackPanel Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Center">
       <Button Style="{StaticResource WindowButtonTriggers}" Width="75" Height="50" Margin="0,0,20,10" Foreground="White" VerticalAlignment="Bottom" HorizontalAlignment="Left" Content="Save" Background="LightGreen"/>
       <Button Style="{StaticResource WindowButtonTriggers}" Width="75" Height="50" Margin="20,0,0,10" Foreground="White" VerticalAlignment="Bottom" HorizontalAlignment="Right" Content="Quit" Background="Red" Click="QuitButton"/>
     </StackPanel>
     <Border Grid.Column="1" BorderBrush="LightGray" CornerRadius="10" BorderThickness="1" Margin="0,0,10,3">
-      <StackPanel VerticalAlignment="Center" Margin="0,0,0,40">
-        <Button Style="{StaticResource WindowButtonTriggers}" Content="New Event" FontFamily="Tw Cen MT Condensed" FontSize="40" Height="60" Width="150" Background="LightGray" Margin="0,0,0,10" MouseEnter="MouseOverAnimation" MouseLeave="MouseLeaveAnimation"/>
-        <Button Style="{StaticResource WindowButtonTriggers}" Content="Delete Event" FontFamily="Tw Cen MT Condensed" FontSize="40" Height="60" Width="150" Background="LightGray" Margin="0,0,0,10" MouseEnter="MouseOverAnimation" MouseLeave="MouseLeaveAnimation"/>
-        <Button Style="{StaticResource WindowButtonTriggers}" Content="Copy Event" FontFamily="Tw Cen MT Condensed" FontSize="40" Height="60" Width="150" Background="LightGray" Margin="0,0,0,10" MouseEnter="MouseOverAnimation" MouseLeave="MouseLeaveAnimation"/>
+      <StackPanel VerticalAlignment="Center" Margin="0,0,0,40" CanVerticallyScroll="True">
+        <Button Style="{StaticResource WindowButtonTriggers}" Content="New Event" FontFamily="Tw Cen MT Condensed" FontSize="40" Height="40" Width="150" Background="LightGray" Margin="0,0,0,10" MouseEnter="MouseOverAnimation" MouseLeave="MouseLeaveAnimation"/>
+        <Button Style="{StaticResource WindowButtonTriggers}" Content="Delete Event" FontFamily="Tw Cen MT Condensed" FontSize="40" Height="40" Width="150" Background="LightGray" Margin="0,0,0,10" MouseEnter="MouseOverAnimation" MouseLeave="MouseLeaveAnimation"/>
+        <Button Style="{StaticResource WindowButtonTriggers}" Content="Edit Event" FontFamily="Tw Cen MT Condensed" FontSize="40" Height="40" Width="150" Background="LightGray" Margin="0,0,0,10" MouseEnter="MouseOverAnimation" MouseLeave="MouseLeaveAnimation"/>
+        <Button Style="{StaticResource WindowButtonTriggers}" Content="Search" FontFamily="Tw Cen MT Condensed" FontSize="40" Height="40" Width="150" Background="LightGray" Margin="0,0,0,10" MouseEnter="MouseOverAnimation" MouseLeave="MouseLeaveAnimation"/>
 
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-          <Button Style="{StaticResource WindowButtonTriggers}" Height="60" Width="60" Margin="0,0,15,0" Background="LightGray">
+          <Button Style="{StaticResource WindowButtonTriggers}" Height="40" Width="60" Margin="0,0,15,0" Background="LightGray" ToolTip="Undo">
             <Image Source="/Assets/Buttons/AnnoyingAgenda-Button-Undo.png"/>
           </Button>
-          <Button Style="{StaticResource WindowButtonTriggers}" Height="60" Width="60" Margin="15,0,0,0" Background="LightGray">
+          <Button Style="{StaticResource WindowButtonTriggers}" Height="40" Width="60" Margin="15,0,0,0" Background="LightGray" ToolTip="Redo">
             <Image Source="/Assets/Buttons/AnnoyingAgenda-Button-Redo.png"/>
           </Button>
         </StackPanel>
