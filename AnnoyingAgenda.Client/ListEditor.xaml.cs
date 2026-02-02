@@ -16,7 +16,10 @@ namespace AnnoyingAgenda.Client
     private List<ToDoList> AllLists;
     private bool IsDeleting = false;
 
+    private readonly string TaskDateSeperator = ", Due: ";
+    private readonly string TaskDateFormat = "MM/dd/yyyy-HH:mm";
 
+    private bool IsDeleting = false;
     public ListEditor(MainWindow _parentWindow, ToDoList _currentList)
     {
       ParentWindow = _parentWindow;
@@ -27,7 +30,7 @@ namespace AnnoyingAgenda.Client
       MakeMinutes();
 
       EventDatePicker.DisplayDateStart = DateTime.Today;
-      EventDatePicker.DisplayDate = DateTime.Today;
+      EventDatePicker.Text = DateTime.Today.ToString();
 
       var JsonFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Annoying Agenda", "aa.json");
 
@@ -71,6 +74,48 @@ namespace AnnoyingAgenda.Client
         DisplayMinutes.Add(MinutesList[i].ToString("mm"));
       }
       MinuteSelector.ItemsSource = DisplayMinutes;
+    }
+
+    private void Page_Loaded(object sender, RoutedEventArgs e)
+    {
+      try
+      {
+        if (CurrentList.ListItems.Count >= 1)
+        {
+          foreach (ToDoItem Item in CurrentList.ListItems)
+          {
+            Button TaskButton = new()
+            {
+              Content = Item.Name + TaskDateSeparator + Item.DueDate.ToString(TaskDateFormat),
+              Height = 40,
+              HorizontalAlignment = HorizontalAlignment.Stretch,
+              FontSize = 30,
+              FontFamily = new FontFamily("Tw Cen MT Condensed"),
+              Background = Brushes.LightGray,
+              Margin = new Thickness(0, 0, 0, 5),
+              Style = (Style)this.FindResource("WindowButtonTriggers")
+            };
+            TaskButton.Click += EventButtonClick;
+            TaskPanel.Children.Add(TaskButton);
+          }
+        }
+        else
+        {
+          TextBlock NoTasksMessage = new()
+          {
+            Text = "No Tasks :)",
+            FontFamily = new FontFamily("Tw Cen MT Condensed"),
+            FontSize = 35,
+            HorizontalAlignment = HorizontalAlignment.Center
+          };
+
+          TaskPanel.Children.Add(NoTasksMessage);
+        }
+      }
+      catch (Exception)
+      {
+        MessageBox.Show("An error occurred when loading your to do list", "Error", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+      }
     }
 
     private void MouseOverAnimation(object sender, MouseEventArgs e)
@@ -125,12 +170,29 @@ namespace AnnoyingAgenda.Client
       }
     }
 
+    private void SaveClick(object sender, RoutedEventArgs e)
+    {
+      if (AllLists.Count > 0)
+      {
+        var OldCurrentList = AllLists.Find(L => L.Name == CurrentList.Name && L.Purpose == CurrentList.Purpose);
+        int OldIndex = AllLists.FindIndex(L => L.Name == CurrentList.Name && L.Purpose == CurrentList.Purpose);
+
+        AllLists.RemoveAt(OldIndex);
+      }
+
+      AllLists.Add(CurrentList);
+
+      var JsonFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Annoying Agenda", "aa.json");
+
+      File.WriteAllText(JsonFilePath, JsonSerializer.Serialize(AllLists, new JsonSerializerOptions() { WriteIndented = true }));
+    }
+
     private void EventButtonClick(object sender, RoutedEventArgs e)
     {
       if (IsDeleting)
       {
-        MessageBoxResult DeletionConfirmation = MessageBox.Show("This action deletes the task", "Confirm Deletion", MessageBoxButton.OKCancel, MessageBoxImage.Exclamation);
-        if (DeletionConfirmation == MessageBoxResult.OK)
+        DeleteEvent(sender, e);
+      }
         {
           Button DeletedTaskButton = (Button)e.Source;
           TaskPanel.Children.Remove(DeletedTaskButton);
@@ -163,8 +225,10 @@ namespace AnnoyingAgenda.Client
       {
         EventDueHour = EventDueHour.Replace("PM", "");
         int EventDueHourNumber = int.Parse(EventDueHour);
+
         EventDueHourNumber += 12;
         EventDueHour = EventDueHourNumber.ToString();
+
         if (int.Parse(EventDueHour) == 24) EventDueHour = 0.ToString();
       }
       DateTime EventDueDate = EventDatePicker.DisplayDate.AddHours(int.Parse(EventDueHour)).AddMinutes(MinuteSelector.SelectedIndex);
@@ -176,7 +240,7 @@ namespace AnnoyingAgenda.Client
 
       Button TaskButton = new()
       {
-        Content = EventName + ", Due: " + EventDueDate.ToString("MM/dd/yyyy-HH:mm"),
+        Content = EventName + TaskDateSeparator + EventDueDate.ToString(TaskDateFormat),
         Height = 40,
         HorizontalAlignment = HorizontalAlignment.Stretch,
         FontSize = 30,
@@ -190,25 +254,14 @@ namespace AnnoyingAgenda.Client
       NewEventPopup.IsOpen = false;
     }
 
-    private void SaveClick(object sender, RoutedEventArgs e)
-    {
-      if (AllLists.Count > 0)
-      {
-        var OldCurrentList = AllLists.Find(L => L.Name == CurrentList.Name && L.Purpose == CurrentList.Purpose);
-        int OldIndex = AllLists.FindIndex(L => L.Name == CurrentList.Name && L.Purpose == CurrentList.Purpose);
-        AllLists.RemoveAt(OldIndex);
-      }
-     
-      AllLists.Add(CurrentList);
-
-      var JsonFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Annoying Agenda", "aa.json");
-
-      File.WriteAllText(JsonFilePath, JsonSerializer.Serialize(AllLists , new JsonSerializerOptions() { WriteIndented = true }));
-    }
-
-    private void CreateNewEvent(object sender, RoutedEventArgs e)
+    private void NewEventButton(object sender, RoutedEventArgs e)
     {
       NewEventPopup.IsOpen = true;
+      }
+     
+    private void CancelNewEventClick(object sender, RoutedEventArgs e)
+    {
+      NewEventPopup.IsOpen = false;
     }
 
     private void CancelNewEventClick(object sender, RoutedEventArgs e)
@@ -237,20 +290,16 @@ namespace AnnoyingAgenda.Client
         if(CurrentList.ListItems.Count >= 1)
         {
           foreach (ToDoItem Item in CurrentList.ListItems)
+    private void DeleteEvent(object sender, RoutedEventArgs e) 
           {
-            Button TaskButton = new()
+      MessageBoxResult DeletionConfirmation = MessageBox.Show("This action deletes the task", "Confirm Deletion", MessageBoxButton.OKCancel, MessageBoxImage.Exclamation);
+      if (DeletionConfirmation == MessageBoxResult.OK)
             {
-              Content = Item.Name + " Due: " + Item.DueDate.ToString("MM/dd/yyyy-HH:mm"),
-              Height = 40,
-              HorizontalAlignment = HorizontalAlignment.Stretch,
-              FontSize = 30,
-              FontFamily = new FontFamily("Tw Cen MT Condensed"),
-              Background = Brushes.LightGray,
-              Margin = new Thickness(0,0,0,5),
-              Style = (Style)this.FindResource("WindowButtonTriggers")
-            };
-            TaskButton.Click += EventButtonClick;
-            TaskPanel.Children.Add(TaskButton);
+        Button DeletedTaskButton = (Button)e.Source;
+        ToDoItem DeletedToDo = GetToDo(sender, e);
+
+        TaskPanel.Children.Remove(DeletedTaskButton);
+        CurrentList.ListItems.Remove(DeletedToDo);
           }
         }
         else
@@ -266,10 +315,23 @@ namespace AnnoyingAgenda.Client
           TaskPanel.Children.Add(NoTasksMessage);
         }
       }
-      catch (Exception)
+
+    private ToDoItem GetToDo(object sender, RoutedEventArgs e)
       {
-        MessageBox.Show("An error occurred when loading your to do list","Error",MessageBoxButton.OK, MessageBoxImage.Exclamation);
+      Button TaskButton = (Button)e.Source;
+
+      string ToDoName = TaskButton.Content.ToString().Split(TaskDateSeparator)[0];
+      string ToDoTime = TaskButton.Content.ToString().Split(TaskDateSeparator)[1];
+
+      ToDoItem Event = CurrentList.ListItems.Find(I => I.Name == ToDoName && I.DueDate.ToString(TaskDateFormat) == ToDoTime);
+
+      return Event;
       }
+
+    private ToDoItem GetToDo(string name, DateTime date)
+    {
+      ToDoItem Event = CurrentList.ListItems.Find(E => E.Name == name && E.DueDate.ToString(TaskDateFormat) == date.ToString(TaskDateFormat));
+      return Event;
     }
   }
 }
