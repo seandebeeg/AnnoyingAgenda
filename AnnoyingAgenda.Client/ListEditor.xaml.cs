@@ -13,13 +13,16 @@ namespace AnnoyingAgenda.Client
   {
     private MainWindow ParentWindow;
     private ToDoList CurrentList;
+    private ToDoItem ChangingItem;
     private List<ToDoList> AllLists;
-    private bool IsDeleting = false;
 
     private readonly string TaskDateSeperator = ", Due: ";
     private readonly string TaskDateFormat = "MM/dd/yyyy-HH:mm";
 
     private bool IsDeleting = false;
+    private bool IsEditing = false;
+    private bool IsMarkingComplete = false;
+
     public ListEditor(MainWindow _parentWindow, ToDoList _currentList)
     {
       ParentWindow = _parentWindow;
@@ -62,6 +65,7 @@ namespace AnnoyingAgenda.Client
         }
       }
       HourSelector.ItemsSource = DisplayHours;
+      EditHourSelector.ItemsSource = DisplayHours;
     }
 
     private void MakeMinutes()
@@ -74,6 +78,7 @@ namespace AnnoyingAgenda.Client
         DisplayMinutes.Add(MinutesList[i].ToString("mm"));
       }
       MinuteSelector.ItemsSource = DisplayMinutes;
+      EditMinuteSelector.ItemsSource = DisplayMinutes;
     }
 
     private void Page_Loaded(object sender, RoutedEventArgs e)
@@ -183,14 +188,9 @@ namespace AnnoyingAgenda.Client
       {
         DeleteEvent(sender, e);
       }
-        {
-          Button DeletedTaskButton = (Button)e.Source;
-          TaskPanel.Children.Remove(DeletedTaskButton);
-          string DeletedToDoName = DeletedTaskButton.Content.ToString().Split(", Due: ")[0];
-          string DeletedToDoTime = DeletedTaskButton.Content.ToString().Split(", Due: ")[1];
-          ToDoItem DeletedToDo = CurrentList.ListItems.Find(I => I.Name == DeletedToDoName && I.DueDate.ToString("MM/dd/yyyy-HH:mm") == DeletedToDoTime);
-          CurrentList.ListItems.Remove(DeletedToDo);
-        }
+      else if (IsEditing)
+      {
+        EditEvent(sender, e);
       }
       else return;
     }
@@ -223,8 +223,6 @@ namespace AnnoyingAgenda.Client
       }
       DateTime EventDueDate = EventDatePicker.DisplayDate.AddHours(int.Parse(EventDueHour)).AddMinutes(MinuteSelector.SelectedIndex);
 
-     
-
       ToDoItem Event = new(EventName, EventDueDate);
       CurrentList.ListItems.Add(Event);
 
@@ -237,82 +235,135 @@ namespace AnnoyingAgenda.Client
     private void NewEventButton(object sender, RoutedEventArgs e)
     {
       NewEventPopup.IsOpen = true;
-      }
-     
-    private void CancelNewEventClick(object sender, RoutedEventArgs e)
-    {
-      NewEventPopup.IsOpen = false;
     }
 
     private void CancelNewEventClick(object sender, RoutedEventArgs e)
     {
       NewEventPopup.IsOpen = false;
+    }
+
+    private void CancelEditClick(object sender, RoutedEventArgs e)
+    {
+      EditEventPopup.IsOpen = false;
     }
 
     private void ToggleDeletionMode(object sender, RoutedEventArgs e)
     {
-      if (IsDeleting) 
+      if (IsDeleting)
       {
         DeleteButton.Foreground = Brushes.Black;
         IsDeleting = false;
       }
-      else 
-      { 
+      else
+      {
         IsDeleting = true;
         DeleteButton.Foreground = Brushes.Red;
       }
     }
 
-    private void Page_Loaded(object sender, RoutedEventArgs e)
+    private void ToggleEditMode(object sender, RoutedEventArgs e)
     {
-      try
+      if (IsEditing)
       {
-        if(CurrentList.ListItems.Count >= 1)
-        {
-          foreach (ToDoItem Item in CurrentList.ListItems)
+        EditButton.Foreground = Brushes.Black;
+        IsEditing = false;
+      }
+      else
+      {
+        IsEditing = true;
+        EditButton.Foreground = Brushes.Blue;
+      }
+    }
+
     private void DeleteEvent(object sender, RoutedEventArgs e) 
-          {
+    {
       MessageBoxResult DeletionConfirmation = MessageBox.Show("This action deletes the task", "Confirm Deletion", MessageBoxButton.OKCancel, MessageBoxImage.Exclamation);
       if (DeletionConfirmation == MessageBoxResult.OK)
-            {
+      {
         Button DeletedTaskButton = (Button)e.Source;
         ToDoItem DeletedToDo = GetToDo(sender, e);
 
         TaskPanel.Children.Remove(DeletedTaskButton);
         CurrentList.ListItems.Remove(DeletedToDo);
-          }
-        }
-        else
-        {
-          TextBlock NoTasksMessage = new()
+      }
+    }
+    
+    private void EditEvent(object sender, RoutedEventArgs e)
+    {
+      Button TaskButton = (Button)e.Source;
+      ToDoItem ToDo = GetToDo(sender, e);
+      ChangingItem = ToDo;
+
+      EditNameBox.Text = ToDo.Name;
+      EditDatePicker.SelectedDate = ToDo.DueDate.Date;
+      EditHourSelector.Text = ToDo.DueDate.Hour.ToString("hh");
+      EditMinuteSelector.Text = ToDo.DueDate.Minute.ToString("mm");
+
+      EditEventPopup.IsOpen = true;
+    }
+
+    private void ConfirmEdit(object sender, RoutedEventArgs e)
+    {
+      ToDoItem EditedTodo = GetToDo(ChangingItem.Name, ChangingItem.DueDate);
+      ToDoItem NewTodo = ChangingItem;
+      Button EditedTaskButton = GetToDoButton(ChangingItem.Name, ChangingItem.DueDate);
+      Button NewTaskButton = new();
+
+      string EventDueHour = (string)EditHourSelector.SelectedItem;
+
+      if (EventDueHour.Contains("AM"))
+      {
+        EventDueHour = EventDueHour.Replace("AM", "");
+      }
+      else
+      {
+        EventDueHour = EventDueHour.Replace("PM", "");
+        int EventDueHourNumber = int.Parse(EventDueHour);
+
+        EventDueHourNumber += 12;
+        EventDueHour = EventDueHourNumber.ToString();
+
+        if (int.Parse(EventDueHour) == 24) EventDueHour = 0.ToString();
+      }
+      NewTodo.Name = EditNameBox.Text;
+      NewTodo.DueDate = EditDatePicker.DisplayDate.AddHours(int.Parse(EventDueHour)).AddMinutes(EditMinuteSelector.SelectedIndex);
+
+      NewTaskButton = CreateToDoButton(NewTodo.Name, NewTodo.DueDate);
+
+      CurrentList.ListItems.Remove(EditedTodo);
+      CurrentList.ListItems.Add(NewTodo);
+      TaskPanel.Children.Remove(EditedTaskButton);
+      TaskPanel.Children.Add(NewTaskButton);
+    }
+
     private Button CreateToDoButton(string name, DateTime date)
     {
       Button TaskButton = new()
-          {
+      {
         Content = name + TaskDateSeperator + date.ToString(TaskDateFormat),
         Height = 40,
         HorizontalAlignment = HorizontalAlignment.Stretch,
         FontSize = 30,
-            FontFamily = new FontFamily("Tw Cen MT Condensed"),
+        FontFamily = new FontFamily("Tw Cen MT Condensed"),
         Background = Brushes.LightGray,
         Margin = new Thickness(0, 0, 0, 5),
         Style = (Style)this.FindResource("WindowButtonTriggers")
-          };
+      };
       TaskButton.Click += EventButtonClick;
       return TaskButton;
-      }
+    }
 
     private ToDoItem GetToDo(object sender, RoutedEventArgs e)
-      {
+    {
       Button TaskButton = (Button)e.Source;
 
-      string ToDoName = TaskButton.Content.ToString().Split(TaskDateSeparator)[0];
-      string ToDoTime = TaskButton.Content.ToString().Split(TaskDateSeparator)[1];
+      string ToDoName = TaskButton.Content.ToString().Split(TaskDateSeperator)[0];
+      string ToDoTime = TaskButton.Content.ToString().Split(TaskDateSeperator)[1];
 
       ToDoItem Event = CurrentList.ListItems.Find(I => I.Name == ToDoName && I.DueDate.ToString(TaskDateFormat) == ToDoTime);
 
       return Event;
-      }
+    }
 
     private Button GetToDoButton(string name, DateTime date)
     {
