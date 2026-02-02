@@ -84,17 +84,7 @@ namespace AnnoyingAgenda.Client
         {
           foreach (ToDoItem Item in CurrentList.ListItems)
           {
-            Button TaskButton = new()
-            {
-              Content = Item.Name + TaskDateSeparator + Item.DueDate.ToString(TaskDateFormat),
-              Height = 40,
-              HorizontalAlignment = HorizontalAlignment.Stretch,
-              FontSize = 30,
-              FontFamily = new FontFamily("Tw Cen MT Condensed"),
-              Background = Brushes.LightGray,
-              Margin = new Thickness(0, 0, 0, 5),
-              Style = (Style)this.FindResource("WindowButtonTriggers")
-            };
+            Button TaskButton = CreateToDoButton(Item.Name, Item.DueDate);
             TaskButton.Click += EventButtonClick;
             TaskPanel.Children.Add(TaskButton);
           }
@@ -238,18 +228,8 @@ namespace AnnoyingAgenda.Client
       ToDoItem Event = new(EventName, EventDueDate);
       CurrentList.ListItems.Add(Event);
 
-      Button TaskButton = new()
-      {
-        Content = EventName + TaskDateSeparator + EventDueDate.ToString(TaskDateFormat),
-        Height = 40,
-        HorizontalAlignment = HorizontalAlignment.Stretch,
-        FontSize = 30,
-        FontFamily = new FontFamily("Tw Cen MT Condensed"),
-        Background = Brushes.LightGray,
-        Margin = new Thickness(0, 0, 0, 5),
-        Style = (Style)this.FindResource("WindowButtonTriggers")
-      };
-      TaskButton.Click += EventButtonClick;
+      Button TaskButton = CreateToDoButton(EventName, EventDueDate);
+
       TaskPanel.Children.Add(TaskButton);
       NewEventPopup.IsOpen = false;
     }
@@ -305,15 +285,21 @@ namespace AnnoyingAgenda.Client
         else
         {
           TextBlock NoTasksMessage = new()
+    private Button CreateToDoButton(string name, DateTime date)
+    {
+      Button TaskButton = new()
           {
-            Text = "No Tasks :)",
+        Content = name + TaskDateSeperator + date.ToString(TaskDateFormat),
+        Height = 40,
+        HorizontalAlignment = HorizontalAlignment.Stretch,
+        FontSize = 30,
             FontFamily = new FontFamily("Tw Cen MT Condensed"),
-            FontSize = 35,
-            HorizontalAlignment = HorizontalAlignment.Center
+        Background = Brushes.LightGray,
+        Margin = new Thickness(0, 0, 0, 5),
+        Style = (Style)this.FindResource("WindowButtonTriggers")
           };
-
-          TaskPanel.Children.Add(NoTasksMessage);
-        }
+      TaskButton.Click += EventButtonClick;
+      return TaskButton;
       }
 
     private ToDoItem GetToDo(object sender, RoutedEventArgs e)
@@ -327,6 +313,22 @@ namespace AnnoyingAgenda.Client
 
       return Event;
       }
+
+    private Button GetToDoButton(string name, DateTime date)
+    {
+      ToDoItem Event = GetToDo(name, date);
+      Button TaskButton = new();
+      foreach(Button ListButton in TaskPanel.Children)
+      {
+        string ButtonContent = name + TaskDateSeperator + date.ToString(TaskDateFormat);
+        if ((string)ListButton.Content == ButtonContent)
+        {
+          TaskButton = ListButton;
+          break;
+        }
+      }
+      return TaskButton;
+    }
 
     private ToDoItem GetToDo(string name, DateTime date)
     {
