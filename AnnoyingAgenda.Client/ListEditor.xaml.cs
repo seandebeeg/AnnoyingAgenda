@@ -190,6 +190,22 @@ namespace AnnoyingAgenda.Client
       NewEventPopup.IsOpen = false;
     }
 
+    private void SaveClick(object sender, RoutedEventArgs e)
+    {
+      if (AllLists.Count > 0)
+      {
+        var OldCurrentList = AllLists.Find(L => L.Name == CurrentList.Name && L.Purpose == CurrentList.Purpose);
+        int OldIndex = AllLists.FindIndex(L => L.Name == CurrentList.Name && L.Purpose == CurrentList.Purpose);
+        AllLists.RemoveAt(OldIndex);
+      }
+     
+      AllLists.Add(CurrentList);
+
+      var JsonFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Annoying Agenda", "aa.json");
+
+      File.WriteAllText(JsonFilePath, JsonSerializer.Serialize(AllLists , new JsonSerializerOptions() { WriteIndented = true }));
+    }
+
     private void CreateNewEvent(object sender, RoutedEventArgs e)
     {
       NewEventPopup.IsOpen = true;

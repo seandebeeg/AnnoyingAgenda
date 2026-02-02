@@ -42,7 +42,7 @@
     </StackPanel>
 
     <StackPanel Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Center">
-      <Button Style="{StaticResource WindowButtonTriggers}" Width="75" Height="50" Margin="0,0,20,10" Foreground="White" VerticalAlignment="Bottom" HorizontalAlignment="Left" Content="Save" Background="LightGreen"/>
+      <Button Style="{StaticResource WindowButtonTriggers}" Width="75" Height="50" Margin="0,0,20,10" Foreground="White" VerticalAlignment="Bottom" HorizontalAlignment="Left" Content="Save" Background="LightGreen" Click="SaveClick"/>
       <Button Style="{StaticResource WindowButtonTriggers}" Width="75" Height="50" Margin="20,0,0,10" Foreground="White" VerticalAlignment="Bottom" HorizontalAlignment="Right" Content="Quit" Background="Red" Click="QuitButton"/>
     </StackPanel>
     <Border Grid.Column="1" BorderBrush="LightGray" CornerRadius="10" BorderThickness="1" Margin="0,0,10,3">
@@ -62,7 +62,6 @@
         </StackPanel>
       </StackPanel>
     </Border>
-
   </Grid>
 </Page>
   
