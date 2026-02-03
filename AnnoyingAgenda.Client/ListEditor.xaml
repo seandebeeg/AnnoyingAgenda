@@ -37,7 +37,7 @@
       </Border>
     </Popup>
 
-    <Popup Height="300" Width="450" IsOpen="False" Placement="Center" x:Name="EditEventPopup" StaysOpen="True" Panel.ZIndex="2">
+    <Popup Height="300" Width="450" IsOpen="False" Placement="Center" x:Name="EditEventPopup" StaysOpen="True">
       <Border BorderBrush="LightGray" BorderThickness="3" Background="White">
         <StackPanel>
           <TextBlock Text="Event Name" HorizontalAlignment="Center" FontSize="30" FontFamily="Tw Cen MT Condensed"/>
@@ -59,9 +59,26 @@
       </Border>
     </Popup>
 
-    <StackPanel Grid.Column="0" x:Name="TaskPanel">
-      
-    </StackPanel>
+    <Popup Height="400" Width="600" Placement="Center" x:Name="SearchPopup" StaysOpen="True" IsOpen="False">
+      <Border BorderBrush="LightGray" BorderThickness="3" Background="White">
+        <StackPanel>
+          <TextBlock Text="Search Term" HorizontalAlignment="Center" FontSize="30" FontFamily="Tw Cen MT Condensed"/>
+          <TextBox x:Name="SearchBox" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="30" FontSize="30" FontFamily="Tw Cen MT Condensed"/>
+          <StackPanel Orientation="Horizontal" Margin="0,20,0,0" HorizontalAlignment="Center">
+            <Button Content="Search" Click="SearchForEvents" HorizontalAlignment="Center" Height="30" Width="50" Background="LightGray" Style="{StaticResource WindowButtonTriggers}" Margin="0,0,10,10"/>
+            <Button Content="Exit" Click="CancelSearchClick" HorizontalAlignment="Center" Height="30" Width="50" Background="LightGray" Style="{StaticResource WindowButtonTriggers}" Margin="10,0,0,10"/>
+          </StackPanel>
+          <ScrollViewer VerticalScrollBarVisibility="Auto" CanContentScroll="True">
+            <StackPanel x:Name="SearchResultPanel" CanVerticallyScroll="True"></StackPanel>
+          </ScrollViewer>
+        </StackPanel>
+      </Border>
+    </Popup>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+      <StackPanel Grid.Column="0" x:Name="TaskPanel" CanVerticallyScroll="True"></StackPanel>
+    </ScrollViewer>
+   
 
     <StackPanel Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Center">
       <Button Style="{StaticResource WindowButtonTriggers}" Width="75" Height="50" Margin="0,0,20,10" Foreground="White" VerticalAlignment="Bottom" HorizontalAlignment="Left" Content="Save" Background="LightGreen" Click="SaveClick"/>
@@ -72,16 +89,7 @@
         <Button Style="{StaticResource WindowButtonTriggers}" Content="New Event" Click="NewEventButton" FontFamily="Tw Cen MT Condensed" FontSize="40" Height="40" Width="150" Background="LightGray" Margin="0,0,0,10" MouseEnter="MouseOverAnimation" MouseLeave="MouseLeaveAnimation"/>
         <Button Style="{StaticResource WindowButtonTriggers}" x:Name="DeleteButton"  Content="Delete Event" Click="ToggleDeletionMode" FontFamily="Tw Cen MT Condensed" FontSize="40" Height="40" Width="150" Background="LightGray" Margin="0,0,0,10" MouseEnter="MouseOverAnimation" MouseLeave="MouseLeaveAnimation"/>
         <Button Style="{StaticResource WindowButtonTriggers}" x:Name="EditButton" Content="Edit Event" Click="ToggleEditMode" FontFamily="Tw Cen MT Condensed" FontSize="40" Height="40" Width="150" Background="LightGray" Margin="0,0,0,10" MouseEnter="MouseOverAnimation" MouseLeave="MouseLeaveAnimation"/>
-        <Button Style="{StaticResource WindowButtonTriggers}" Content="Search" FontFamily="Tw Cen MT Condensed" FontSize="40" Height="40" Width="150" Background="LightGray" Margin="0,0,0,10" MouseEnter="MouseOverAnimation" MouseLeave="MouseLeaveAnimation"/>
-
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-          <Button Style="{StaticResource WindowButtonTriggers}" Height="40" Width="60" Margin="0,0,15,0" Background="LightGray" ToolTip="Undo">
-            <Image Source="/Assets/Buttons/AnnoyingAgenda-Button-Undo.png"/>
-          </Button>
-          <Button Style="{StaticResource WindowButtonTriggers}" Height="40" Width="60" Margin="15,0,0,0" Background="LightGray" ToolTip="Redo">
-            <Image Source="/Assets/Buttons/AnnoyingAgenda-Button-Redo.png"/>
-          </Button>
-        </StackPanel>
+        <Button Style="{StaticResource WindowButtonTriggers}" Content="Search" Click="SearchClick" FontFamily="Tw Cen MT Condensed" FontSize="40" Height="40" Width="150" Background="LightGray" Margin="0,0,0,10" MouseEnter="MouseOverAnimation" MouseLeave="MouseLeaveAnimation"/>
       </StackPanel>
     </Border>
   </Grid>

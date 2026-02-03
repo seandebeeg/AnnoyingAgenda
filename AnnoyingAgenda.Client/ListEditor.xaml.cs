@@ -89,7 +89,9 @@ namespace AnnoyingAgenda.Client
           foreach (ToDoItem Item in CurrentList.ListItems)
           {
             Button TaskButton = CreateToDoButton(Item.Name, Item.DueDate);
-            TaskButton.Click += EventButtonClick;
+
+            if (Item.IsComplete) TaskButton.Background = Brushes.LightGreen;
+
             TaskPanel.Children.Add(TaskButton);
           }
         }
@@ -154,21 +156,15 @@ namespace AnnoyingAgenda.Client
     {
       MessageBoxResult QuitConfirmation = MessageBox.Show("Any unsaved work will be lost, do you want to proceed?", "Quit?", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
-      if(QuitConfirmation == MessageBoxResult.Yes)
-      {
-        ParentWindow.MainNavigation.Navigate(new ListPage(ParentWindow));
-      }
-      else
-      {
-        return;
-      }
+      if(QuitConfirmation == MessageBoxResult.Yes) ParentWindow.MainNavigation.Navigate(new ListPage(ParentWindow));
+      else return;
     }
 
     private void SaveClick(object sender, RoutedEventArgs e)
     {
       if (AllLists.Count > 0)
       {
-        var OldCurrentList = AllLists.Find(L => L.Name == CurrentList.Name && L.Purpose == CurrentList.Purpose);
+        ToDoList? OldCurrentList = AllLists.Find(L => L.Name == CurrentList.Name && L.Purpose == CurrentList.Purpose);
         int OldIndex = AllLists.FindIndex(L => L.Name == CurrentList.Name && L.Purpose == CurrentList.Purpose);
 
         AllLists.RemoveAt(OldIndex);
@@ -196,7 +192,9 @@ namespace AnnoyingAgenda.Client
 
       if (string.IsNullOrWhiteSpace(EventName) || EventDatePicker.DisplayDate.ToString("MM/dd/yyyy") is null || HourSelector.SelectedItem is null || MinuteSelector.SelectedItem is null)
       {
+        NewEventPopup.IsOpen = false;
         MessageBox.Show("Unable to create task", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        NewEventPopup.IsOpen = true;
         return;
       }
 
@@ -225,19 +223,16 @@ namespace AnnoyingAgenda.Client
       NewEventPopup.IsOpen = false;
     }
 
-    private void NewEventButton(object sender, RoutedEventArgs e)
-    {
-      NewEventPopup.IsOpen = true;
-    }
+    private void NewEventButton(object sender, RoutedEventArgs e) => NewEventPopup.IsOpen = true;
+    private void SearchClick(object sender, RoutedEventArgs e) => SearchPopup.IsOpen = true;
+    private void CancelNewEventClick(object sender, RoutedEventArgs e) => NewEventPopup.IsOpen = false;
+    private void CancelEditClick(object sender, RoutedEventArgs e) => EditEventPopup.IsOpen = false;
 
-    private void CancelNewEventClick(object sender, RoutedEventArgs e)
+    private void CancelSearchClick(object sender, RoutedEventArgs e)
     {
-      NewEventPopup.IsOpen = false;
-    }
-
-    private void CancelEditClick(object sender, RoutedEventArgs e)
-    {
-      EditEventPopup.IsOpen = false;
+      SearchPopup.IsOpen = false;
+      SearchBox.Text = string.Empty;
+      SearchResultPanel.Children.Clear();
     }
 
     private void ToggleDeletionMode(object sender, RoutedEventArgs e)
@@ -270,11 +265,14 @@ namespace AnnoyingAgenda.Client
 
     private void DeleteEvent(object sender, RoutedEventArgs e) 
     {
+      bool WasSearchOpen = SearchPopup.IsOpen;
+      if (WasSearchOpen) SearchPopup.IsOpen = false;
       MessageBoxResult DeletionConfirmation = MessageBox.Show("This action deletes the task", "Confirm Deletion", MessageBoxButton.OKCancel, MessageBoxImage.Exclamation);
+      if (WasSearchOpen) SearchPopup.IsOpen = true;
       if (DeletionConfirmation == MessageBoxResult.OK)
       {
-        Button DeletedTaskButton = (Button)e.Source;
         ToDoItem DeletedToDo = GetToDo(sender, e);
+        Button DeletedTaskButton = GetToDoButton(DeletedToDo.Name, DeletedToDo.DueDate);
 
         TaskPanel.Children.Remove(DeletedTaskButton);
         CurrentList.ListItems.Remove(DeletedToDo);
@@ -340,14 +338,31 @@ namespace AnnoyingAgenda.Client
       EditEventPopup.IsOpen = false;
     }
 
+    private void SearchForEvents(object sender, RoutedEventArgs e)
+    {
+      string SearchTerm = SearchBox.Text.ToLower();
+      foreach(ToDoItem Item in CurrentList.ListItems)
+      {
+        if (Item.Name.ToLower().Contains(SearchTerm))
+        {
+          Button MatchingButton = CreateToDoButton(Item.Name, Item.DueDate);
+          SearchResultPanel.Children.Add(MatchingButton);
+        }
+      }
+    }
+
     private void MarkAsComplete(object sender, RoutedEventArgs e)
     {
+      ToDoItem CompletedToDo = GetToDo(sender, e);
+      CompletedToDo.IsComplete = CompletedToDo.IsComplete ? false: true;
       Button TaskButton = (Button)e.Source;
-      TaskButton.Background = Brushes.LightGreen;
+      TaskButton.Background = CompletedToDo.IsComplete ? Brushes.LightGreen : Brushes.LightGray;
     }
 
     private Button CreateToDoButton(string name, DateTime date)
     {
+      ToDoItem MatchingToDo = GetToDo(name, date);
+
       Button TaskButton = new()
       {
         Content = name + TaskDateSeparator + date.ToString(TaskDateFormat),
@@ -355,7 +370,7 @@ namespace AnnoyingAgenda.Client
         HorizontalAlignment = HorizontalAlignment.Stretch,
         FontSize = 30,
         FontFamily = new FontFamily("Tw Cen MT Condensed"),
-        Background = Brushes.LightGray,
+        Background = MatchingToDo.IsComplete? Brushes.LightGreen : Brushes.LightGray,
         Margin = new Thickness(0, 0, 0, 5),
         Style = (Style)this.FindResource("WindowButtonTriggers")
       };
