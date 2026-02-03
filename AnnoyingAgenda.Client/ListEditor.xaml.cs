@@ -16,12 +16,11 @@ namespace AnnoyingAgenda.Client
     private ToDoItem ChangingItem;
     private List<ToDoList> AllLists;
 
-    private readonly string TaskDateSeperator = ", Due: ";
-    private readonly string TaskDateFormat = "MM/dd/yyyy-HH:mm";
+    private const string TaskDateSeparator = ", Due: ";
+    private const string TaskDateFormat = "MM/dd/yyyy-HH:mm";
 
     private bool IsDeleting = false;
     private bool IsEditing = false;
-    private bool IsMarkingComplete = false;
 
     public ListEditor(MainWindow _parentWindow, ToDoList _currentList)
     {
@@ -184,15 +183,9 @@ namespace AnnoyingAgenda.Client
 
     private void EventButtonClick(object sender, RoutedEventArgs e)
     {
-      if (IsDeleting)
-      {
-        DeleteEvent(sender, e);
-      }
-      else if (IsEditing)
-      {
-        EditEvent(sender, e);
-      }
-      else return;
+      if (IsDeleting && !IsEditing)DeleteEvent(sender, e);
+      else if (IsEditing && !IsDeleting)EditEvent(sender, e);
+      else if(!IsDeleting && !IsEditing)MarkAsComplete(sender, e);
     }
 
     private void CreateEvent(object sender, RoutedEventArgs e)
@@ -309,6 +302,15 @@ namespace AnnoyingAgenda.Client
       Button EditedTaskButton = GetToDoButton(ChangingItem.Name, ChangingItem.DueDate);
       Button NewTaskButton = new();
 
+      NewTodo.Name = EditNameBox.Text;
+     
+
+      if (string.IsNullOrWhiteSpace(NewTodo.Name) || EventDatePicker.DisplayDate.ToString("MM/dd/yyyy") is null || EditHourSelector.SelectedItem is null || EditMinuteSelector.SelectedItem is null)
+      {
+        MessageBox.Show("Unable to edit task", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        return;
+      }
+
       string EventDueHour = (string)EditHourSelector.SelectedItem;
 
       if (EventDueHour.Contains("AM"))
@@ -325,7 +327,7 @@ namespace AnnoyingAgenda.Client
 
         if (int.Parse(EventDueHour) == 24) EventDueHour = 0.ToString();
       }
-      NewTodo.Name = EditNameBox.Text;
+     
       NewTodo.DueDate = EditDatePicker.DisplayDate.AddHours(int.Parse(EventDueHour)).AddMinutes(EditMinuteSelector.SelectedIndex);
 
       NewTaskButton = CreateToDoButton(NewTodo.Name, NewTodo.DueDate);
@@ -334,13 +336,21 @@ namespace AnnoyingAgenda.Client
       CurrentList.ListItems.Add(NewTodo);
       TaskPanel.Children.Remove(EditedTaskButton);
       TaskPanel.Children.Add(NewTaskButton);
+
+      EditEventPopup.IsOpen = false;
+    }
+
+    private void MarkAsComplete(object sender, RoutedEventArgs e)
+    {
+      Button TaskButton = (Button)e.Source;
+      TaskButton.Background = Brushes.LightGreen;
     }
 
     private Button CreateToDoButton(string name, DateTime date)
     {
       Button TaskButton = new()
       {
-        Content = name + TaskDateSeperator + date.ToString(TaskDateFormat),
+        Content = name + TaskDateSeparator + date.ToString(TaskDateFormat),
         Height = 40,
         HorizontalAlignment = HorizontalAlignment.Stretch,
         FontSize = 30,
@@ -357,10 +367,10 @@ namespace AnnoyingAgenda.Client
     {
       Button TaskButton = (Button)e.Source;
 
-      string ToDoName = TaskButton.Content.ToString().Split(TaskDateSeperator)[0];
-      string ToDoTime = TaskButton.Content.ToString().Split(TaskDateSeperator)[1];
+      string? ToDoName = TaskButton.Content.ToString().Split(TaskDateSeparator)[0];
+      string? ToDoTime = TaskButton.Content.ToString().Split(TaskDateSeparator)[1];
 
-      ToDoItem Event = CurrentList.ListItems.Find(I => I.Name == ToDoName && I.DueDate.ToString(TaskDateFormat) == ToDoTime);
+      ToDoItem? Event = CurrentList.ListItems.Find(I => I.Name == ToDoName && I.DueDate.ToString(TaskDateFormat) == ToDoTime);
 
       return Event;
     }
@@ -371,7 +381,7 @@ namespace AnnoyingAgenda.Client
       Button TaskButton = new();
       foreach(Button ListButton in TaskPanel.Children)
       {
-        string ButtonContent = name + TaskDateSeperator + date.ToString(TaskDateFormat);
+        string ButtonContent = name + TaskDateSeparator + date.ToString(TaskDateFormat);
         if ((string)ListButton.Content == ButtonContent)
         {
           TaskButton = ListButton;
@@ -383,7 +393,7 @@ namespace AnnoyingAgenda.Client
 
     private ToDoItem GetToDo(string name, DateTime date)
     {
-      ToDoItem Event = CurrentList.ListItems.Find(E => E.Name == name && E.DueDate.ToString(TaskDateFormat) == date.ToString(TaskDateFormat));
+      ToDoItem? Event = CurrentList.ListItems.Find(E => E.Name == name && E.DueDate.ToString(TaskDateFormat) == date.ToString(TaskDateFormat));
       return Event;
     }
   }
