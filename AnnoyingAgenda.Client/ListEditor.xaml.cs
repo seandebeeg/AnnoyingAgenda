@@ -34,7 +34,7 @@ namespace AnnoyingAgenda.Client
       EventDatePicker.DisplayDateStart = DateTime.Today;
       EventDatePicker.Text = DateTime.Today.ToString();
 
-      var JsonFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Annoying Agenda", "aa.json");
+      var JsonFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Annoying Agenda", "Lists.json");
 
       if (!File.Exists(JsonFilePath) || string.IsNullOrWhiteSpace(File.ReadAllText(JsonFilePath)))
       {
@@ -94,18 +94,6 @@ namespace AnnoyingAgenda.Client
 
             TaskPanel.Children.Add(TaskButton);
           }
-        }
-        else
-        {
-          TextBlock NoTasksMessage = new()
-          {
-            Text = "No Tasks :)",
-            FontFamily = new FontFamily("Tw Cen MT Condensed"),
-            FontSize = 35,
-            HorizontalAlignment = HorizontalAlignment.Center
-          };
-
-          TaskPanel.Children.Add(NoTasksMessage);
         }
       }
       catch (Exception)
@@ -172,7 +160,7 @@ namespace AnnoyingAgenda.Client
 
       AllLists.Add(CurrentList);
 
-      var JsonFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Annoying Agenda", "aa.json");
+      var JsonFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Annoying Agenda", "Lists.json");
 
       File.WriteAllText(JsonFilePath, JsonSerializer.Serialize(AllLists, new JsonSerializerOptions() { WriteIndented = true }));
     }
