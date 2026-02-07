@@ -1,12 +1,14 @@
 ﻿using AnnoyingAgenda.Shared;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
+using System.Management.Automation;
+using System.Security.Principal;
 using System.ServiceProcess;
 using System.Text.Json;
 using System.Windows;
-using System.Management.Automation;
 using System.Windows.Controls;
-using System.Security.Principal;
-using System.Diagnostics;
+using System.Windows.Data;
 
 namespace AnnoyingAgenda.Client
 {
@@ -14,6 +16,7 @@ namespace AnnoyingAgenda.Client
   {
     MainWindow ParentWindow;
     Settings? ServiceSettings = new();
+    ObservableCollection<SettingsItem> SettingItems;
 
     public SettingsPage(MainWindow _parentWindow)
     {
@@ -36,7 +39,18 @@ namespace AnnoyingAgenda.Client
         File.WriteAllText(SettingsJsonPath, JsonSerializer.Serialize(ServiceSettings));
       }
 
+      SettingItems = new ObservableCollection<SettingsItem>()
+      {
+        new SettingsItem() { Name = "Notification Bomb", IsEnabled = false},
+        new SettingsItem() { Name = "Play Sounds", IsEnabled = false},
+        new SettingsItem() { Name = "Close Apps", IsEnabled = false},
+        new SettingsItem() { Name = "Spam Popups", IsEnabled = false}
+      };
 
+      var View = CollectionViewSource.GetDefaultView(SettingItems);
+      View.GroupDescriptions.Add(new PropertyGroupDescription("Name"));
+      SettingsList.ItemsSource = View;
+      LoadSettings();
     }
 
     private bool IsServiceInstalled()
@@ -72,7 +86,7 @@ namespace AnnoyingAgenda.Client
     {
       if (!IsAdmin())
       {
-        var PSI = new ProcessStartInfo
+        var PSI = new ProcessStartInfo //UAC prompt to install service
         {
           Verb = "runas",
           UseShellExecute = true,
@@ -84,7 +98,7 @@ namespace AnnoyingAgenda.Client
           Process.Start(PSI);
           Application.Current.Shutdown();
         }
-        catch(Exception ex)
+        catch(Exception)
         {
           MessageBox.Show("You need to be an administrator to install the service","Access Denied", MessageBoxButton.OK, MessageBoxImage.Hand);
           return;
@@ -152,6 +166,46 @@ namespace AnnoyingAgenda.Client
       }
 
       return null;
+    }
+
+    private void LoadSettings()
+    {
+      try
+      {
+        var SettingsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Annoying Agenda", "Settings.json");
+
+        if (File.Exists(SettingsPath))
+        {
+          var LoadedSettings = JsonSerializer.Deserialize<Settings>(
+          File.ReadAllText(SettingsPath));
+         
+          if (LoadedSettings?.SettingsItems != null)
+          {
+            foreach (var Item in SettingItems)
+            {
+              var SavedItem = LoadedSettings.SettingsItems
+                .FirstOrDefault(I => I.Name == Item.Name);
+              if (SavedItem != null)
+              {
+                Item.IsEnabled = SavedItem.IsEnabled;
+              }
+            }
+          }
+        }
+      }
+      catch (Exception ex)
+      {
+        MessageBox.Show($"Error loading settings: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+      }
+    }
+
+    private void SaveSettings(object sender, RoutedEventArgs e)
+    {
+      var SettingsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Annoying Agenda", "Settings.json");
+
+      ServiceSettings.SettingsItems = SettingItems.Where(I => I.IsEnabled).ToList();
+
+      File.WriteAllText(SettingsPath, JsonSerializer.Serialize(ServiceSettings, new JsonSerializerOptions { WriteIndented = true}));
     }
 
     private void MainMenuClick(object sender, RoutedEventArgs e)

@@ -33,11 +33,12 @@
     public string ClientRootPath { get; set; }
     public string ServiceRootPath { get; set; }
     public bool IsServiceInstalled { get; set; }
+    public List<SettingsItem> SettingsItems { get; set; }
   }
 
   public class SettingsItem
   {
     public required string Name { get; set; }
-    public bool IsActive { get; set; }
+    public bool IsEnabled { get; set; }
   }
 }
