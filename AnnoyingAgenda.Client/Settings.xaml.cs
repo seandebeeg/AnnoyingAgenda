@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
+using System.Management;
 using System.Management.Automation;
 using System.Security.Principal;
 using System.ServiceProcess;
@@ -105,49 +106,44 @@ namespace AnnoyingAgenda.Client
         }
       }
 
-      try
+     
+      string ServicePath = ServiceSettings.ServiceRootPath;
+
+      if (string.IsNullOrWhiteSpace(ServicePath))
       {
-        string ServicePath = ServiceSettings.ServiceRootPath;
-
-        if (string.IsNullOrWhiteSpace(ServicePath))
-        {
-          MessageBox.Show("Service executable was not found", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-          return;
-        }
-
-        PowerShell PS = PowerShell.Create();
-
-        PS.AddCommand("New-Service")
-          .AddParameter("Name", "AnnoyingAgendaService")
-          .AddParameter("BinaryPath", ServicePath)
-          .AddParameter("DisplayName", "Annoying Agenda Service")
-          .AddParameter("StartupType", "Automatic")
-          .Invoke();
-
-        if (PS.HadErrors)
-        {
-          MessageBox.Show($"An error occurred when installing {string.Join("\n", PS.Streams.Error.Select(e => e.Exception.Message))}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-          return;
-        }
-
-        PS.Commands.Clear();
-        PS.AddCommand("Start-Service")
-          .AddParameter("Name", "AnnoyingAgendaService")
-          .Invoke();
-
-        if (PS.HadErrors)
-        {
-          MessageBox.Show($"An error occurred when starting the service {string.Join("\n", PS.Streams.Error.Select(e=> e.Exception.Message))}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-          return;
-        }
-        else
-        {
-          MessageBox.Show("The service has successfully installed and started", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
-        }
+        MessageBox.Show("Service executable was not found", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        return;
       }
-      catch (Exception)
-      {
 
+      PowerShell PS = PowerShell.Create();
+
+      PS.AddCommand("New-Service")
+        .AddParameter("Name", "AnnoyingAgendaService")
+        .AddParameter("BinaryPath", ServicePath)
+        .AddParameter("DisplayName", "Annoying Agenda Service")
+        .AddParameter("StartupType", "Automatic")
+        .Invoke();
+
+      if (PS.HadErrors)
+      {
+        MessageBox.Show($"An error occurred when installing {string.Join("\n", PS.Streams.Error.Select(e => e.Exception.Message))}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        return;
+      }
+
+      PS.Commands.Clear();
+      PS.AddCommand("Start-Service")
+        .AddParameter("Name", "AnnoyingAgendaService")
+        .Invoke();
+
+      if (PS.HadErrors)
+      {
+        MessageBox.Show($"An error occurred when starting the service {string.Join("\n", PS.Streams.Error.Select(e=> e.Exception.Message))}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        return;
+      }
+      else
+      {
+        MessageBox.Show("The service has successfully installed and started", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+        ServiceSettings.IsServiceInstalled = true;
       }
     }
 
@@ -158,13 +154,47 @@ namespace AnnoyingAgenda.Client
 
     private string GetServicePath()
     {
-      string ServicePath = Path.Combine(ServiceSettings.ServiceRootPath, "AnnoyingAgenda.Service.exe");
-
-      if (!string.IsNullOrWhiteSpace(ServicePath) && File.Exists(ServicePath))
+      try
       {
-        return ServicePath;
+        ManagementObjectSearcher Searcher = new ManagementObjectSearcher("SELECT PathName FROM Win32_Service WHERE Name = '" + "AnnoyingAgendaService" + "'");
+        foreach (ManagementObject Obj in Searcher.Get())
+        {
+          string PathName = Obj["PathName"] as string;
+          if (!string.IsNullOrEmpty(PathName))
+          {
+            if (PathName.StartsWith("\""))
+            {
+              int EndQuoteIndex = PathName.IndexOf("\"", 1);
+              if (EndQuoteIndex > 0)
+              {
+                string ExecutablePath = PathName.Substring(1, EndQuoteIndex - 1);
+                return ExecutablePath;
+              }
+            }
+            else
+            {
+              int FirstSpaceIndex = PathName.IndexOf(" ");
+              if (FirstSpaceIndex > 0)
+              {
+                string ExecutablePath = PathName.Substring(0, FirstSpaceIndex);
+                return ExecutablePath;
+              }
+              else
+              {
+                return PathName;
+              }
+            }
+          }
+        }
       }
-
+      catch (ManagementException Ex)
+      {
+        Console.WriteLine("An error occurred when getting the service path: " + Ex.Message);
+      }
+      catch (Exception Ex)
+      {
+        Console.WriteLine("An error occurred: " + Ex.Message);
+      }
       return null;
     }
 

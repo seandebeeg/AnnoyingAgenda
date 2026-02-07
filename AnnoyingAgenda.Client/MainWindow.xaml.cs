@@ -72,8 +72,8 @@ namespace AnnoyingAgenda.Client
 
       ServiceSettings = JsonSerializer.Deserialize<Settings>(File.ReadAllText(SettingsJsonPath)) ?? new Settings();
 
-      ServiceSettings.ClientRootPath = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
-      ServiceSettings.ServiceRootPath = Path.Combine(ServiceSettings.ClientRootPath, "..", "AnnoyingAgenda.Service","bin","x64","Debug","net8.0","AnnoyingAgenda.Service.exe");
+      ServiceSettings.ClientRootPath = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location));
+      ServiceSettings.ServiceRootPath = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "AnnoyingAgenda.Service.exe");
 
       File.WriteAllText(SettingsJsonPath, JsonSerializer.Serialize(ServiceSettings, new JsonSerializerOptions() { WriteIndented = true }));
     }
