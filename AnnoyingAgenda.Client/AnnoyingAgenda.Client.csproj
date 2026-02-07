@@ -26,14 +26,19 @@
 		<None Remove="Assets\Buttons\AnnoyingAgenda-Button-Minimize.png" />
 		<None Remove="Assets\Buttons\AnnoyingAgenda-Button-Maximize.png" />
 		<None Remove="Assets\Buttons\AnnoyingAgenda-Button-Restore.png" />
-		<None Remove="Assets\Buttons\AnnoyingAgenda-Button-Undo.png"/>
-		<None Remove="Assets\Buttons\AnnoyingAgenda-Button-Redo.png"/>
-		<None Remove="Assets\Buttons\AnnoyingAgenda-Button-Add.png"/>
-		<None Remove="Assets\Buttons\AnnoyingAgenda-Button-Trash.png"/>
+		<None Remove="Assets\Buttons\AnnoyingAgenda-Button-Undo.png" />
+		<None Remove="Assets\Buttons\AnnoyingAgenda-Button-Redo.png" />
+		<None Remove="Assets\Buttons\AnnoyingAgenda-Button-Add.png" />
+		<None Remove="Assets\Buttons\AnnoyingAgenda-Button-Trash.png" />
 	</ItemGroup>
 
 	<ItemGroup>
 	  <Content Include="Assets\AnnoyingAgenda.ico" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="Microsoft.PowerShell.SDK" Version="7.4.0" />
+	  <PackageReference Include="System.ServiceProcess.ServiceController" Version="10.0.2" />
 	</ItemGroup>
 
 	<Import Project="..\AnnoyingAgenda.Shared\AnnoyingAgenda.Shared.projitems" Label="Shared" />

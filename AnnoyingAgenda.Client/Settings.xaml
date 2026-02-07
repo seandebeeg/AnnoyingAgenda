@@ -8,7 +8,39 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="Settings">
 
-    <Grid>
-        
-    </Grid>
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="55"/>
+      <RowDefinition Height="*"/>
+      <RowDefinition Height="50"/>
+    </Grid.RowDefinitions>
+    <TextBlock Text="Settings" Height="75" FontSize="50" FontFamily="Tw Cen MT Condensed" HorizontalAlignment="Center" Grid.Row="0"/>
+
+    <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Visible">
+      <StackPanel CanVerticallyScroll="True">
+        <TextBlock Text="Service" FontFamily="Tw Cen MT Condensed" FontSize="30"/>
+        <StackPanel Orientation="Horizontal">
+          <CheckBox IsChecked="False" VerticalAlignment="Center"/>
+          <Label FontFamily="Tw Cen MT Condensed" FontSize="20">Spam Popups</Label>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+          <CheckBox IsChecked="False" VerticalAlignment="Center"/>
+          <Label FontFamily="Tw Cen MT Condensed" FontSize="20">Close Apps</Label>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+          <CheckBox IsChecked="False" VerticalAlignment="Center"/>
+          <Label FontFamily="Tw Cen MT Condensed" FontSize="20">Notification Bomb</Label>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+          <CheckBox IsChecked="False" VerticalAlignment="Center"/>
+          <Label FontFamily="Tw Cen MT Condensed" FontSize="20">Sounds</Label>
+        </StackPanel>
+        <Button x:Name="InstallationButton" Content="Install Service" Width="100" Style="{StaticResource WindowButtonTriggers}" Height="30" Background="LightGray" HorizontalAlignment="Left" FontFamily="Tw Cen MT Condensed" FontSize="20"/>
+      </StackPanel>
+    </ScrollViewer>
+    <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Center">
+      <Button Content="Save Settings" Click="MainMenuClick" Margin="00,0,20,0" Width="120" Height="30" Style="{StaticResource WindowButtonTriggers}" Background="LightGray" FontFamily="Tw Cen MT Condensed" FontSize="20"/>
+      <Button Content="Back To Main Menu" Click="MainMenuClick" Width="120" Margin="20,0,0,0" Height="30" Style="{StaticResource WindowButtonTriggers}" Background="LightGray" FontFamily="Tw Cen MT Condensed" FontSize="20"/>
+    </StackPanel>
+  </Grid>
 </Page>

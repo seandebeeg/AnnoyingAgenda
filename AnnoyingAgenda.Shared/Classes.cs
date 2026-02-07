@@ -27,4 +27,17 @@
     public DateTime DueDate {get; set;}
     public bool IsComplete { get; set; }
   }
+
+  public class Settings
+  {
+    public string ClientRootPath { get; set; }
+    public string ServiceRootPath { get; set; }
+    public bool IsServiceInstalled { get; set; }
+  }
+
+  public class SettingsItem
+  {
+    public required string Name { get; set; }
+    public bool IsActive { get; set; }
+  }
 }

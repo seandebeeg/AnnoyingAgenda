@@ -6,6 +6,7 @@ using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using System.Windows.Controls;
 using System.ComponentModel;
+using System.Security.Principal;
 
 namespace AnnoyingAgenda.Client
 {
@@ -35,6 +36,10 @@ namespace AnnoyingAgenda.Client
       this.DataContext = this;
       WindowTitle = "Annoying Agenda";
       PageTitle = "Main Menu";
+
+      var UserIdentity = WindowsIdentity.GetCurrent();
+      var Principal = new WindowsPrincipal(UserIdentity);
+      if (Principal.IsInRole(WindowsBuiltInRole.Administrator)) MainNavigation.Navigate(new SettingsPage(this));
     }
 
     private void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -50,11 +55,27 @@ namespace AnnoyingAgenda.Client
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
       var JsonFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Annoying Agenda", "Lists.json");
+      var SettingsJsonPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Annoying Agenda", "Settings.json");
+      Settings ServiceSettings = new();
 
       if (!File.Exists(JsonFilePath) || string.IsNullOrWhiteSpace(File.ReadAllText(JsonFilePath)))
       {
+        Directory.CreateDirectory(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Annoying Agenda"));
         File.WriteAllText(JsonFilePath, JsonSerializer.Serialize(new List<ToDoList>(), new JsonSerializerOptions() { WriteIndented = true }));
       }
+
+      if (!File.Exists(SettingsJsonPath) || string.IsNullOrWhiteSpace(File.ReadAllText(SettingsJsonPath)))
+      {
+        Directory.CreateDirectory(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Annoying Agenda"));
+        File.WriteAllText(SettingsJsonPath, JsonSerializer.Serialize(new Settings(), new JsonSerializerOptions() { WriteIndented = true }));
+      }
+
+      ServiceSettings = JsonSerializer.Deserialize<Settings>(File.ReadAllText(SettingsJsonPath)) ?? new Settings();
+
+      ServiceSettings.ClientRootPath = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
+      ServiceSettings.ServiceRootPath = Path.Combine(ServiceSettings.ClientRootPath, "..", "AnnoyingAgenda.Service","bin","x64","Debug","net8.0","AnnoyingAgenda.Service.exe");
+
+      File.WriteAllText(SettingsJsonPath, JsonSerializer.Serialize(ServiceSettings, new JsonSerializerOptions() { WriteIndented = true }));
     }
 
     private void CloseButton(object sender, RoutedEventArgs e)
