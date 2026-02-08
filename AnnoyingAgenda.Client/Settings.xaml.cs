@@ -149,7 +149,42 @@ namespace AnnoyingAgenda.Client
 
     private void UninstallService(object sender, RoutedEventArgs e)
     {
+      if (!IsAdmin())
+      {
+        var PSI = new ProcessStartInfo //UAC prompt to uninstall service
+        {
+          Verb = "runas",
+          UseShellExecute = true,
+          FileName = Environment.ProcessPath
+        };
 
+        try
+        {
+          Process.Start(PSI);
+          Application.Current.Shutdown();
+        }
+        catch (Exception)
+        {
+          MessageBox.Show("You need to be an administrator to uninstall the service", "Access Denied", MessageBoxButton.OK, MessageBoxImage.Hand);
+          return;
+        }
+      }
+
+      PowerShell PS = PowerShell.Create();
+
+      PS.AddCommand("Remove-Service")
+        .AddParameter("Name", "AnnoyingAgendaService")
+        .Invoke();
+
+      if (PS.HadErrors)
+      {
+        MessageBox.Show("Uninstall unsuccessful", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+      }
+      else
+      {
+        MessageBox.Show("Uninstall successful", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+        UpdateInstallButton();
+      }
     }
 
     private string GetServicePath()
