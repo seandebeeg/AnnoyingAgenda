@@ -1,9 +1,11 @@
 ﻿using AnnoyingAgenda.Shared;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.IO;
 using System.Windows.Media;
 using System.Windows;
 using System.Windows.Controls;
+using System.Diagnostics;
 
 namespace AnnoyingAgenda.Client
 {
@@ -19,6 +21,7 @@ namespace AnnoyingAgenda.Client
       ParentWindow.PageTitle = "Lists";
 
       var JsonFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Annoying Agenda", "Lists.json");
+      
 
       if (!File.Exists(JsonFilePath) || string.IsNullOrWhiteSpace(File.ReadAllText(JsonFilePath)))
       {
@@ -26,9 +29,11 @@ namespace AnnoyingAgenda.Client
       }
       else
       {
-        AllLists = JsonSerializer.Deserialize<List<ToDoList>>(File.ReadAllText(JsonFilePath));
+        JsonNode? ListNode = JsonNode.Parse(File.ReadAllText(JsonFilePath));
 
-        foreach(ToDoList List in AllLists)
+        AllLists = ListNode["AllLists"].Deserialize<List<ToDoList>>();
+
+        foreach (ToDoList List in AllLists)
         {
           Border ListSelectButtonBorder = new()
           {

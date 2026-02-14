@@ -6,6 +6,8 @@ using System.Windows.Input;
 using System.Windows;
 using System.Windows.Media.Animation;
 using System.Windows.Media;
+using System.Text.Json.Nodes;
+using System.Management.Automation;
 
 namespace AnnoyingAgenda.Client
 {
@@ -42,8 +44,8 @@ namespace AnnoyingAgenda.Client
       }
       else
       {
-        AllLists = JsonSerializer.Deserialize<List<ToDoList>>(File.ReadAllText(JsonFilePath));
-        File.WriteAllText(JsonFilePath, JsonSerializer.Serialize(AllLists));
+        JsonNode? ListNode = JsonNode.Parse(File.ReadAllText(JsonFilePath));
+        AllLists = ListNode["AllLists"].Deserialize<List<ToDoList>>();
       }
     }
 
@@ -162,7 +164,17 @@ namespace AnnoyingAgenda.Client
 
       var JsonFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Annoying Agenda", "Lists.json");
 
-      File.WriteAllText(JsonFilePath, JsonSerializer.Serialize(AllLists, new JsonSerializerOptions() { WriteIndented = true }));
+      JsonNode ListNode = JsonNode.Parse(File.ReadAllText(JsonFilePath));
+      JsonArray ListArray = new();
+
+      foreach(ToDoList List in AllLists)
+      {
+        ListArray.Add(List);
+      }
+
+      ListNode["AllLists"] = ListArray;
+
+      File.WriteAllText(JsonFilePath, JsonSerializer.Serialize(ListNode, new JsonSerializerOptions() { WriteIndented = true }));
     }
 
     private void EventButtonClick(object sender, RoutedEventArgs e)

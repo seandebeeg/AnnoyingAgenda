@@ -7,6 +7,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Controls;
 using System.ComponentModel;
 using System.Security.Principal;
+using System.Text.Json.Nodes;
 
 namespace AnnoyingAgenda.Client
 {
@@ -56,12 +57,16 @@ namespace AnnoyingAgenda.Client
     {
       var JsonFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Annoying Agenda", "Lists.json");
       var SettingsJsonPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Annoying Agenda", "Settings.json");
+
+      JsonNode ListNode = new JsonObject();
+      ListNode["AllLists"] = new JsonArray();
+
       Settings ServiceSettings = new();
 
       if (!File.Exists(JsonFilePath) || string.IsNullOrWhiteSpace(File.ReadAllText(JsonFilePath)))
       {
         Directory.CreateDirectory(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Annoying Agenda"));
-        File.WriteAllText(JsonFilePath, JsonSerializer.Serialize(new List<ToDoList>(), new JsonSerializerOptions() { WriteIndented = true }));
+        File.WriteAllText(JsonFilePath, JsonSerializer.Serialize(ListNode, new JsonSerializerOptions() { WriteIndented = true }));
       }
 
       if (!File.Exists(SettingsJsonPath) || string.IsNullOrWhiteSpace(File.ReadAllText(SettingsJsonPath)))
