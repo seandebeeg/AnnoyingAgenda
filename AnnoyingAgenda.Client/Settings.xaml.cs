@@ -144,7 +144,9 @@ namespace AnnoyingAgenda.Client
       {
         MessageBox.Show("The service has successfully installed and started", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
         ServiceSettings.IsServiceInstalled = true;
+        SaveSettings();
       }
+      UpdateInstallButton();
     }
 
     private void UninstallService(object sender, RoutedEventArgs e)
@@ -172,7 +174,9 @@ namespace AnnoyingAgenda.Client
 
       PowerShell PS = PowerShell.Create();
 
-      PS.AddCommand("Remove-Service")
+      PS.AddCommand("Stop-Service")
+        .AddParameter("Name", "AnnoyingAgendaService")
+        .AddCommand("Remove-Service")
         .AddParameter("Name", "AnnoyingAgendaService")
         .Invoke();
 
@@ -183,8 +187,10 @@ namespace AnnoyingAgenda.Client
       else
       {
         MessageBox.Show("Uninstall successful", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
-        UpdateInstallButton();
+        ServiceSettings.IsServiceInstalled = false;
+        SaveSettings();
       }
+      UpdateInstallButton();
     }
 
     private string GetServicePath()
@@ -271,6 +277,15 @@ namespace AnnoyingAgenda.Client
       ServiceSettings.SettingsItems = SettingItems.Where(I => I.IsEnabled).ToList();
 
       File.WriteAllText(SettingsPath, JsonSerializer.Serialize(ServiceSettings, new JsonSerializerOptions { WriteIndented = true}));
+    }
+
+    private void SaveSettings()
+    {
+      var SettingsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Annoying Agenda", "Settings.json");
+
+      ServiceSettings.SettingsItems = SettingItems.Where(I => I.IsEnabled).ToList();
+
+      File.WriteAllText(SettingsPath, JsonSerializer.Serialize(ServiceSettings, new JsonSerializerOptions { WriteIndented = true }));
     }
 
     private void MainMenuClick(object sender, RoutedEventArgs e)
