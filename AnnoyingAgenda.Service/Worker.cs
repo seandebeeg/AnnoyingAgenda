@@ -1,5 +1,8 @@
 using AnnoyingAgenda.Shared;
 using Microsoft.Extensions.Options;
+using Microsoft.Toolkit.Uwp.Notifications;
+using System.Diagnostics;
+using System.IO.Pipes;
 using System.Text.Json;
 
 namespace AnnoyingAgenda.Service
@@ -7,19 +10,17 @@ namespace AnnoyingAgenda.Service
   public class Worker : BackgroundService
   {
     private readonly ILogger<Worker> _logger;
-    private CancellationToken CurrentCancellationToken;
-    private IConfiguration Configuration;
-    private List<ToDoList> AllLists = [];
+    
+    private List<ToDoList> AllLists = new();
     private Settings ServiceSettings = new();
     private IOptionsMonitor<Settings> SettingsWatcher;
     private IOptionsMonitor<List<ToDoList>> ListWatcher;
     private object Sync = new();
 
-    public Worker(ILogger<Worker> logger, IOptionsMonitor<Settings> settingsMonitor, IOptionsMonitor<List<ToDoList>> listWatcher, IConfiguration configuration)
+    public Worker(ILogger<Worker> logger, IOptionsMonitor<Settings> settingsMonitor, IOptionsMonitor<List<ToDoList>> listWatcher)
     {
       _logger = logger;
       SettingsWatcher = settingsMonitor;
-      Configuration = configuration;
       ListWatcher = listWatcher;
 
       SettingsWatcher.OnChange((Updated) => 
@@ -66,7 +67,6 @@ namespace AnnoyingAgenda.Service
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-      CurrentCancellationToken = stoppingToken;
       bool HasOverdueTasks = false;
 
       while (!stoppingToken.IsCancellationRequested)
@@ -79,16 +79,44 @@ namespace AnnoyingAgenda.Service
             {
               HasOverdueTasks = true;
               _logger.LogInformation("Overdue Task: {Item}", Item.Name);
+              CloseApps();  
             }
           }
         }
-
-        if (HasOverdueTasks)
-        {
-
+        await Task.Delay(3000);
+          }
         }
 
-        await Task.Delay(3000);
+    private void CloseApps()
+    {
+      string[] ClosableApps = [
+        "chrome", "chatgpt", "Discord",
+        "minecraft.windows", "Minecraft", "opera",
+        "firefox", "steam", "tiktok",
+        "instagram", "XboxPcApp","whatsapp",
+        "hulu","prime","disney",
+        "tubi","crunchyroll","paramount",
+        "espn","netflix", "roblox"];
+
+      if (true)
+        {
+        try 
+        {
+          foreach(string AppName in ClosableApps)
+          {
+            Process[] AppProcesses = Process.GetProcessesByName(AppName);
+
+            foreach(Process AppProcess in AppProcesses)
+            {
+              AppProcess.CloseMainWindow();
+              _logger.LogInformation("Closed App: {}", AppProcess.ProcessName);
+            }
+          }
+        }
+        catch (InvalidOperationException ex)
+        {
+          _logger.LogError("Couldn't close an app {errmsg}", ex);
+        }
       }
     }
   }
