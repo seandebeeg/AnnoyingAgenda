@@ -93,12 +93,13 @@ namespace AnnoyingAgenda.Service
         "chrome", "chatgpt", "Discord",
         "minecraft.windows", "Minecraft", "opera",
         "firefox", "steam", "tiktok",
-        "instagram", "XboxPcApp","whatsapp",
+        "instagram", "XboxPcApp", "whatsapp",
         "hulu","prime","disney",
         "tubi","crunchyroll","paramount",
-        "espn","netflix", "roblox"];
+        "espn","netflix", "roblox", "javaw"
+      ];
 
-      if (true)
+      if (ServiceSettings.SettingsItems.Contains(ServiceSettings.SettingsItems.Find(I => I.Name == "Close Apps")))
         {
         try 
         {
@@ -118,6 +119,62 @@ namespace AnnoyingAgenda.Service
           _logger.LogError("Couldn't close an app {errmsg}", ex);
         }
       }
+    }
+
+    private void PlaySound(string FileName)
+    {
+      AudioFileReader Reader = new(Path.Combine("Assets", "Sounds", FileName));
+      WaveOutEvent Player = new();
+
+      Player.Init(Reader);
+      Player.Play();
+
+      while (Player.PlaybackState == PlaybackState.Playing)
+      {
+        Task.Delay(100).Wait();
+      }
+    }
+
+    private string ChooseSound()
+    {
+      Random RandomNumber = new();
+      int ChosenNumber = RandomNumber.Next(1, 10);
+      string FileName = string.Empty;
+
+      switch (ChosenNumber)
+      {
+        case 1:
+          FileName = "america-eagle-gunshots.mp3";
+          break;
+        case 2:
+          FileName = "and-his-name-is-john-cena-1_3.mp3";
+          break;
+        case 3:
+          FileName = "door-knocking-very-realistic.mp3";
+          break;
+        case 4:
+          FileName = "eas-sound.mp3";
+          break;
+        case 5:
+          FileName = "hl2-stalker-scream.mp3";
+          break;
+        case 6:
+          FileName = "loud-explosion.mp3";
+          break;
+        case 7:
+          FileName = "loud-incorrect-buzzer.mp3";
+          break;
+        case 8:
+          FileName = "modern-warfare-2-tactical-nuke-sound.mp3";
+          break;
+        case 9:
+          FileName = "nuclear-diarrhea.mp3";
+          break;
+        case 10:
+          FileName = "windows-11-error-sound.mp3";
+          break;
+      }
+      return FileName;
     }
   }
 }
