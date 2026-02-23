@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnnoyingAgenda.Service", "A
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "AnnoyingAgenda.Shared", "AnnoyingAgenda.Shared\AnnoyingAgenda.Shared.shproj", "{3706EE67-D74D-4CA1-8D19-4DC414C45580}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnnoyingAgenda.Tray", "AnnoyingAgenda.Tray\AnnoyingAgenda.Tray.csproj", "{83C742C5-C3CB-F7F4-A488-6456BBEE9AFB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,14 @@ Global
 		{75C2069D-1285-420F-93AE-F9B494594A92}.Release|Any CPU.Build.0 = Release|Any CPU
 		{75C2069D-1285-420F-93AE-F9B494594A92}.Release|x64.ActiveCfg = Release|x64
 		{75C2069D-1285-420F-93AE-F9B494594A92}.Release|x64.Build.0 = Release|x64
+		{83C742C5-C3CB-F7F4-A488-6456BBEE9AFB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83C742C5-C3CB-F7F4-A488-6456BBEE9AFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83C742C5-C3CB-F7F4-A488-6456BBEE9AFB}.Debug|x64.ActiveCfg = Debug|x64
+		{83C742C5-C3CB-F7F4-A488-6456BBEE9AFB}.Debug|x64.Build.0 = Debug|x64
+		{83C742C5-C3CB-F7F4-A488-6456BBEE9AFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83C742C5-C3CB-F7F4-A488-6456BBEE9AFB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{83C742C5-C3CB-F7F4-A488-6456BBEE9AFB}.Release|x64.ActiveCfg = Release|x64
+		{83C742C5-C3CB-F7F4-A488-6456BBEE9AFB}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
