@@ -4,6 +4,10 @@ using Microsoft.Toolkit.Uwp.Notifications;
 using System.Diagnostics;
 using System.IO.Pipes;
 using System.Text.Json;
+using System;
+using System.IO;
+using System.Threading.Tasks;
+using NAudio.Wave;
 
 namespace AnnoyingAgenda.Service
 {
@@ -16,6 +20,12 @@ namespace AnnoyingAgenda.Service
     private IOptionsMonitor<Settings> SettingsWatcher;
     private IOptionsMonitor<List<ToDoList>> ListWatcher;
     private object Sync = new();
+
+    private NamedPipeServerStream ServicePipe = new( //Client side is AnnoyingAgenda.Tray
+       "AnnoyingAgenda",
+       PipeDirection.Out,
+       1,
+       PipeTransmissionMode.Message);
 
     public Worker(ILogger<Worker> logger, IOptionsMonitor<Settings> settingsMonitor, IOptionsMonitor<List<ToDoList>> listWatcher)
     {
@@ -67,25 +77,42 @@ namespace AnnoyingAgenda.Service
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-      bool HasOverdueTasks = false;
-
       while (!stoppingToken.IsCancellationRequested)
       {
-        foreach (ToDoList List in AllLists)
+        lock (Sync)
         {
-          foreach (ToDoItem Item in List.ListItems)
+          foreach (ToDoList List in AllLists)
           {
-            if (DateTime.Now >= Item.DueDate && !Item.IsComplete)
+            foreach (ToDoItem Item in List.ListItems)
             {
-              HasOverdueTasks = true;
-              _logger.LogInformation("Overdue Task: {Item}", Item.Name);
-              CloseApps();  
+              if (DateTime.Now >= Item.DueDate && !Item.IsComplete)
+              {
+                _logger.LogInformation("Overdue Task: {Item}", Item.Name);
+                if(Process.GetProcessesByName("AnnoyingAgenda.Tray").Length == 0) Process.Start(ServiceSettings.TrayRootPath);
+
+
+                if (!ServicePipe.IsConnected)
+                {
+                  ServicePipe.WaitForConnection();
+                  _logger.LogInformation("Client Connection found");
+                }
+
+                NotifyUser();
+                
+              }
             }
           }
         }
-        await Task.Delay(3000);
-          }
-        }
+        await Task.Delay(3000, stoppingToken);
+      }
+    }
+
+
+    private async void NotifyUser()
+    {
+      var Writer = new StreamWriter(ServicePipe) { AutoFlush = true};
+      await Writer.WriteLineAsync("Annoying Agenda is online");
+    }
 
     private void CloseApps()
     {
@@ -109,7 +136,7 @@ namespace AnnoyingAgenda.Service
 
             foreach(Process AppProcess in AppProcesses)
             {
-              AppProcess.CloseMainWindow();
+              AppProcess.Kill();
               _logger.LogInformation("Closed App: {}", AppProcess.ProcessName);
             }
           }

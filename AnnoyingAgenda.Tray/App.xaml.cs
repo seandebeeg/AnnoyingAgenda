@@ -6,6 +6,7 @@ using System.Windows;
 using System.IO.Pipes;
 using System.Windows.Forms;
 using System.Windows.Media.Imaging;
+using System.IO;
 
 namespace AnnoyingAgenda.Tray
 {
@@ -13,7 +14,9 @@ namespace AnnoyingAgenda.Tray
   {
     private NotifyIcon Tray = new();
 
-    protected override void OnStartup(StartupEventArgs e)
+    NamedPipeClientStream ClientPipe = new(".", "AnnoyingAgenda", PipeDirection.In); //AnnoyingAgenda.Service is server side
+
+    protected override async void OnStartup(StartupEventArgs e)
     {
       base.OnStartup(e);
 
@@ -21,9 +24,28 @@ namespace AnnoyingAgenda.Tray
 
       Tray.Icon = Icon.ExtractAssociatedIcon(System.Windows.Forms.Application.ExecutablePath);
       Tray.Visible = true;
-      Tray.DoubleClick += (s, args) => Process.Start("AnnoyingAgenda.Client.exe"); 
-    }
+      Tray.DoubleClick += (s, args) => Process.Start("AnnoyingAgenda.Client.exe");
 
-    NamedPipeClientStream ClientPipe = new(".", "AnnoyingAgenda", PipeDirection.In);
+      await ClientPipe.ConnectAsync();
+      var Reader = new StreamReader(ClientPipe);
+      string ServiceMessage = await Reader.ReadLineAsync();
+
+      System.Windows.MessageBox.Show(ServiceMessage,"Overdue Task", MessageBoxButton.OK, MessageBoxImage.Hand);
+
+      await Task.CompletedTask;
+
+      while(ClientPipe.IsConnected)
+      {
+
+        ServiceMessage = await Reader.ReadLineAsync();
+
+        if (!string.IsNullOrEmpty(ServiceMessage))
+        {
+          System.Windows.MessageBox.Show(ServiceMessage, "Overdue Task", MessageBoxButton.OK, MessageBoxImage.Stop);
+        }
+      }
+
+      App.Current.Shutdown();
+    }
   }
 }
