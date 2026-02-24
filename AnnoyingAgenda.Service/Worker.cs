@@ -56,7 +56,7 @@ namespace AnnoyingAgenda.Service
 
       if (!File.Exists(SettingsJsonPath) || string.IsNullOrWhiteSpace(File.ReadAllText(SettingsJsonPath)))
       {
-        File.WriteAllText(SettingsJsonPath, JsonSerializer.Serialize(new Settings(), new JsonSerializerOptions() { WriteIndented = true }));
+        File.WriteAllText(SettingsJsonPath, JsonSerializer.Serialize(new Settings(), options: new JsonSerializerOptions() { WriteIndented = true }));
         ServiceSettings = new Settings();
       }
       else
@@ -73,6 +73,7 @@ namespace AnnoyingAgenda.Service
       }
 
       ServiceSettings.ServiceRootPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "AnnoyingAgenda.Service.exe");
+      ServiceSettings.TrayRootPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "AnnoyingAgenda.Tray.exe");
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -88,8 +89,11 @@ namespace AnnoyingAgenda.Service
               if (DateTime.Now >= Item.DueDate && !Item.IsComplete)
               {
                 _logger.LogInformation("Overdue Task: {Item}", Item.Name);
-                if(Process.GetProcessesByName("AnnoyingAgenda.Tray").Length == 0) Process.Start(ServiceSettings.TrayRootPath);
-
+                
+                if (Process.GetProcessesByName("AnnoyingAgenda.Tray").Length == 0)
+                {
+                  StartTrayApp();
+                }
 
                 if (!ServicePipe.IsConnected)
                 {
@@ -97,8 +101,7 @@ namespace AnnoyingAgenda.Service
                   _logger.LogInformation("Client Connection found");
                 }
 
-                NotifyUser();
-                
+                NotifyUser(Item);
               }
             }
           }
@@ -107,11 +110,39 @@ namespace AnnoyingAgenda.Service
       }
     }
 
-
-    private async void NotifyUser()
+    private void StartTrayApp()
     {
-      var Writer = new StreamWriter(ServicePipe) { AutoFlush = true};
-      await Writer.WriteLineAsync("Annoying Agenda is online");
+      try
+      {
+        if (string.IsNullOrWhiteSpace(ServiceSettings.TrayRootPath) || !File.Exists(ServiceSettings.TrayRootPath))
+        {
+          _logger.LogError("Tray app path not found: {Path}", ServiceSettings.TrayRootPath);
+          return;
+        }
+
+        var ProcessInfo = new ProcessStartInfo
+        {
+          FileName = ServiceSettings.TrayRootPath,
+          Arguments = "--mode=hidden",
+          UseShellExecute = true,
+          RedirectStandardOutput = false,
+          RedirectStandardError = false,
+          CreateNoWindow = true
+        };
+
+        Process.Start(ProcessInfo);
+        _logger.LogInformation("Tray app started: {Path}", ServiceSettings.TrayRootPath);
+      }
+      catch (Exception ex)
+      {
+        _logger.LogError(ex, "Failed to start tray app");
+      }
+    }
+
+    private async void NotifyUser(ToDoItem Item)
+    {
+      var Writer = new StreamWriter(ServicePipe) { AutoFlush = true };
+      await Writer.WriteLineAsync($"{Item.Name} due on {Item.DueDate:MM-dd-yyyy hh:mm}");
     }
 
     private void CloseApps()

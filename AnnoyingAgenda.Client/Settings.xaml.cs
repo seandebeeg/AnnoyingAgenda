@@ -22,7 +22,7 @@ namespace AnnoyingAgenda.Client
     public SettingsPage(MainWindow _parentWindow)
     {
       InitializeComponent();
-      UpdateInstallButton();
+      
 
       ParentWindow = _parentWindow;
       ParentWindow.PageTitle = "Settings";
@@ -51,12 +51,16 @@ namespace AnnoyingAgenda.Client
       var View = CollectionViewSource.GetDefaultView(SettingItems);
       View.GroupDescriptions.Add(new PropertyGroupDescription("Name"));
       SettingsList.ItemsSource = View;
+
       LoadSettings();
+      UpdateInstallButton();
     }
 
     private bool IsServiceInstalled()
     {
-      return ServiceController.GetServices().Any(s => s.ServiceName == "AnnoyingAgendaService");
+      ServiceSettings.IsServiceInstalled = ServiceController.GetServices().Any(s => s.ServiceName == "AnnoyingAgendaService");
+      SaveSettings();
+      return ServiceSettings.IsServiceInstalled;
     }
 
     private bool IsAdmin()
@@ -98,6 +102,7 @@ namespace AnnoyingAgenda.Client
         {
           Process.Start(PSI);
           Application.Current.Shutdown();
+          return;
         }
         catch(Exception)
         {
@@ -114,6 +119,8 @@ namespace AnnoyingAgenda.Client
         MessageBox.Show("Service executable was not found", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         return;
       }
+
+      Process.Start("AnnoyingAgenda.Tray.exe");
 
       PowerShell PS = PowerShell.Create();
 
@@ -176,7 +183,11 @@ namespace AnnoyingAgenda.Client
 
       PS.AddCommand("Stop-Service")
         .AddParameter("Name", "AnnoyingAgendaService")
-        .AddCommand("Remove-Service")
+        .Invoke();
+
+      PS.Commands.Clear();
+
+      PS.AddCommand("Remove-Service")
         .AddParameter("Name", "AnnoyingAgendaService")
         .Invoke();
 
