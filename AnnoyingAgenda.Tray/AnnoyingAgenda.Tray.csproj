@@ -18,7 +18,34 @@
   <ItemGroup>
     <PackageReference Include="Hardcodet.NotifyIcon.Wpf" Version="2.0.1" />
     <PackageReference Include="Microsoft.Toolkit.Uwp.Notifications" Version="7.1.3" />
+		<PackageReference Include="NAudio" Version="2.2.1" />
   </ItemGroup>
+
+	<ItemGroup>
+		<Resource Include="Assets\Sounds\america-eagle-gunshots.mp3"/>
+		<Resource Include="Assets\Sounds\and-his-name-is-john-cena-1_3.mp3"/>
+		<Resource Include="Assets\Sounds\door-knocking-very-realistic.mp3"/>
+		<Resource Include="Assets\Sounds\eas-sound.mp3"/>
+		<Resource Include="Assets\Sounds\hl2-stalker-scream.mp3"/>
+		<Resource Include="Assets\Sounds\loud-explosion.mp3"/>
+		<Resource Include="Assets\Sounds\loud-incorrect-buzzer.mp3"/>
+		<Resource Include="Assets\Sounds\modern-warfare-2-tactical-nuke-sound.mp3"/>
+		<Resource Include="Assets\Sounds\nuclear-diarrhea.mp3"/>
+		<Resource Include="Assets\Sounds\windows-11-error-sound.mp3"/>
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Remove="Assets\Sounds\america-eagle-gunshots.mp3"/>
+		<None Remove="Assets\Sounds\and-his-name-is-john-cena-1_3.mp3"/>
+		<None Remove="Assets\Sounds\door-knocking-very-realistic.mp3"/>
+		<None Remove="Assets\Sounds\eas-sound.mp3"/>
+		<None Remove="Assets\Sounds\hl2-stalker-scream.mp3"/>
+		<None Remove="Assets\Sounds\loud-explosion.mp3"/>
+		<None Remove="Assets\Sounds\loud-incorrect-buzzer.mp3"/>
+		<None Remove="Assets\Sounds\modern-warfare-2-tactical-nuke-sound.mp3"/>
+		<None Remove="Assets\Sounds\nuclear-diarrhea.mp3"/>
+		<None Remove="Assets\Sounds\windows-11-error-sound.mp3"/>
+	</ItemGroup>
 
 	<ItemGroup>
 		<Resource Include="AnnoyingAgenda.ico" Key="Icon" CopyToOutputDirectory="Always"></Resource>
