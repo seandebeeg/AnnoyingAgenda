@@ -1,13 +1,8 @@
 using AnnoyingAgenda.Shared;
 using Microsoft.Extensions.Options;
-using Microsoft.Toolkit.Uwp.Notifications;
 using System.Diagnostics;
 using System.IO.Pipes;
 using System.Text.Json;
-using System;
-using System.IO;
-using System.Threading.Tasks;
-using NAudio.Wave;
 
 namespace AnnoyingAgenda.Service
 {
@@ -143,96 +138,6 @@ namespace AnnoyingAgenda.Service
     {
       var Writer = new StreamWriter(ServicePipe) { AutoFlush = true };
       await Writer.WriteLineAsync($"{Item.Name} due on {Item.DueDate:MM-dd-yyyy hh:mm}");
-    }
-
-    private void CloseApps()
-    {
-      string[] ClosableApps = [
-        "chrome", "chatgpt", "Discord",
-        "minecraft.windows", "Minecraft", "opera",
-        "firefox", "steam", "tiktok",
-        "instagram", "XboxPcApp", "whatsapp",
-        "hulu","prime","disney",
-        "tubi","crunchyroll","paramount",
-        "espn","netflix", "roblox", "javaw"
-      ];
-
-      if (ServiceSettings.SettingsItems.Contains(ServiceSettings.SettingsItems.Find(I => I.Name == "Close Apps")))
-        {
-        try 
-        {
-          foreach(string AppName in ClosableApps)
-          {
-            Process[] AppProcesses = Process.GetProcessesByName(AppName);
-
-            foreach(Process AppProcess in AppProcesses)
-            {
-              AppProcess.Kill();
-              _logger.LogInformation("Closed App: {}", AppProcess.ProcessName);
-            }
-          }
-        }
-        catch (InvalidOperationException ex)
-        {
-          _logger.LogError("Couldn't close an app {errmsg}", ex);
-        }
-      }
-    }
-
-    private void PlaySound(string FileName)
-    {
-      AudioFileReader Reader = new(Path.Combine("Assets", "Sounds", FileName));
-      WaveOutEvent Player = new();
-
-      Player.Init(Reader);
-      Player.Play();
-
-      while (Player.PlaybackState == PlaybackState.Playing)
-      {
-        Task.Delay(100).Wait();
-      }
-    }
-
-    private string ChooseSound()
-    {
-      Random RandomNumber = new();
-      int ChosenNumber = RandomNumber.Next(1, 10);
-      string FileName = string.Empty;
-
-      switch (ChosenNumber)
-      {
-        case 1:
-          FileName = "america-eagle-gunshots.mp3";
-          break;
-        case 2:
-          FileName = "and-his-name-is-john-cena-1_3.mp3";
-          break;
-        case 3:
-          FileName = "door-knocking-very-realistic.mp3";
-          break;
-        case 4:
-          FileName = "eas-sound.mp3";
-          break;
-        case 5:
-          FileName = "hl2-stalker-scream.mp3";
-          break;
-        case 6:
-          FileName = "loud-explosion.mp3";
-          break;
-        case 7:
-          FileName = "loud-incorrect-buzzer.mp3";
-          break;
-        case 8:
-          FileName = "modern-warfare-2-tactical-nuke-sound.mp3";
-          break;
-        case 9:
-          FileName = "nuclear-diarrhea.mp3";
-          break;
-        case 10:
-          FileName = "windows-11-error-sound.mp3";
-          break;
-      }
-      return FileName;
     }
   }
 }
