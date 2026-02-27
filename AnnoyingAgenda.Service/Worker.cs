@@ -93,10 +93,38 @@ namespace AnnoyingAgenda.Service
                 if (!ServicePipe.IsConnected)
                 {
                   ServicePipe.WaitForConnection();
-                  _logger.LogInformation("Client Connection found");
+                  _logger.LogInformation("Client Connection Successful");
                 }
 
-                NotifyUser(Item);
+                if (Item.TimesNotified >= 0 
+                  && ServiceSettings.SettingsItems.Contains(new SettingsItem { Name = "Notification Bomb", IsEnabled = true }))
+                {
+                  Item.TimesNotified++;
+                  SendToast(Item);
+                }
+
+                if (Item.TimesNotified >= 5
+                  && ServiceSettings.SettingsItems.Contains(new SettingsItem { Name = "Popup Spam", IsEnabled = true }))
+                {
+                  Item.TimesNotified++;
+                  SendMessageBox(Item);
+                }
+
+                if (Item.TimesNotified >= 10
+                  && ServiceSettings.SettingsItems.Contains(new SettingsItem { Name = "Play Sounds", IsEnabled = true }))
+                {
+                  Item.TimesNotified++;
+                  SendSoundRequest();
+                }
+
+                if (Item.TimesNotified >= 15
+                  && ServiceSettings.SettingsItems.Contains(new SettingsItem { Name = "Close Apps", IsEnabled = true }))
+                {
+                  Item.TimesNotified++;
+                  RequestAppClosure();
+                }
+
+                Debug.WriteLine(Item.TimesNotified);
               }
             }
           }
@@ -118,7 +146,6 @@ namespace AnnoyingAgenda.Service
         var ProcessInfo = new ProcessStartInfo
         {
           FileName = ServiceSettings.TrayRootPath,
-          Arguments = "--mode=hidden",
           UseShellExecute = true,
           RedirectStandardOutput = false,
           RedirectStandardError = false,
@@ -134,10 +161,28 @@ namespace AnnoyingAgenda.Service
       }
     }
 
-    private async void NotifyUser(ToDoItem Item)
+    private async void SendMessageBox(ToDoItem Item)
     {
       var Writer = new StreamWriter(ServicePipe) { AutoFlush = true };
-      await Writer.WriteLineAsync($"{Item.Name} due on {Item.DueDate:MM-dd-yyyy hh:mm}");
+      await Writer.WriteLineAsync($"Message Box Notification:{Item.Name} due on {Item.DueDate:MM-dd-yyyy hh:mm}");
+    }
+
+    private async void SendSoundRequest()
+    {
+      var Writer = new StreamWriter(ServicePipe) { AutoFlush = true };
+      await Writer.WriteLineAsync($"Play Sound");
+    }
+
+    private async void RequestAppClosure()
+    {
+      var Writer = new StreamWriter(ServicePipe) { AutoFlush = true };
+      await Writer.WriteLineAsync($"Close Apps");
+    }
+
+    private async void SendToast(ToDoItem Item)
+    {
+      var Writer = new StreamWriter(ServicePipe) { AutoFlush = true };
+      await Writer.WriteLineAsync($"Toast Notification:{Item.Name} due on {Item.DueDate:MM-dd-yyyy hh:mm}");
     }
   }
 }

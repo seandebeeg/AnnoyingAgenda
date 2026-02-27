@@ -21,10 +21,12 @@
       Name = name;
       DueDate = duedate;
       IsComplete = false;
+      TimesNotified = 0;
     }
 
     public string Name { get; set; }
     public DateTime DueDate {get; set;}
+    public int TimesNotified { get; set; }
     public bool IsComplete { get; set; }
   }
 
@@ -37,10 +39,29 @@
     public List<SettingsItem> SettingsItems { get; set; }
   }
 
-  public class SettingsItem
+  public class SettingsItem : IEquatable<SettingsItem>
   {
     public required string Name { get; set; }
-    public int TimesNotified { get; set; }
     public bool IsEnabled { get; set; }
+
+    public bool Equals(SettingsItem? other)
+    {
+      if (other is null) return false;
+      return Name == other.Name &&
+        IsEnabled == other.IsEnabled;
+    }
+
+    public override bool Equals(object? obj)
+    {
+      if (obj is null) return false;
+      if (ReferenceEquals(this, obj)) return true;
+      if (obj.GetType() != GetType()) return false;
+      return Equals(obj as SettingsItem);
+    }
+
+    public override int GetHashCode()
+    {
+      return HashCode.Combine(Name, IsEnabled);
+    }
   }
 }
