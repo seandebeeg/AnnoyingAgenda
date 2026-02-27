@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net8.0-windows</TargetFramework>
+    <TargetFramework>net8.0-windows10.0.17763.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
 		<Platforms>AnyCPU;x64</Platforms>
@@ -22,29 +22,16 @@
   </ItemGroup>
 
 	<ItemGroup>
-		<Resource Include="Assets\Sounds\america-eagle-gunshots.mp3"/>
-		<Resource Include="Assets\Sounds\and-his-name-is-john-cena-1_3.mp3"/>
-		<Resource Include="Assets\Sounds\door-knocking-very-realistic.mp3"/>
-		<Resource Include="Assets\Sounds\eas-sound.mp3"/>
-		<Resource Include="Assets\Sounds\hl2-stalker-scream.mp3"/>
-		<Resource Include="Assets\Sounds\loud-explosion.mp3"/>
-		<Resource Include="Assets\Sounds\loud-incorrect-buzzer.mp3"/>
-		<Resource Include="Assets\Sounds\modern-warfare-2-tactical-nuke-sound.mp3"/>
-		<Resource Include="Assets\Sounds\nuclear-diarrhea.mp3"/>
-		<Resource Include="Assets\Sounds\windows-11-error-sound.mp3"/>
-	</ItemGroup>
-
-	<ItemGroup>
-		<None Remove="Assets\Sounds\america-eagle-gunshots.mp3"/>
-		<None Remove="Assets\Sounds\and-his-name-is-john-cena-1_3.mp3"/>
-		<None Remove="Assets\Sounds\door-knocking-very-realistic.mp3"/>
-		<None Remove="Assets\Sounds\eas-sound.mp3"/>
-		<None Remove="Assets\Sounds\hl2-stalker-scream.mp3"/>
-		<None Remove="Assets\Sounds\loud-explosion.mp3"/>
-		<None Remove="Assets\Sounds\loud-incorrect-buzzer.mp3"/>
-		<None Remove="Assets\Sounds\modern-warfare-2-tactical-nuke-sound.mp3"/>
-		<None Remove="Assets\Sounds\nuclear-diarrhea.mp3"/>
-		<None Remove="Assets\Sounds\windows-11-error-sound.mp3"/>
+		<EmbeddedResource Include="Assets\Sounds\america-eagle-gunshots.mp3" CopyToOutputDirectory="Always" />
+		<EmbeddedResource Include="Assets\Sounds\and-his-name-is-john-cena-1_3.mp3" CopyToOutputDirectory="Always" />
+		<EmbeddedResource Include="Assets\Sounds\door-knocking-very-realistic.mp3" CopyToOutputDirectory="Always" />
+		<EmbeddedResource Include="Assets\Sounds\eas-sound.mp3" CopyToOutputDirectory="Always" />
+		<EmbeddedResource Include="Assets\Sounds\hl2-stalker-scream.mp3" CopyToOutputDirectory="Always" />
+		<EmbeddedResource Include="Assets\Sounds\loud-explosion.mp3" CopyToOutputDirectory="Always" />
+		<EmbeddedResource Include="Assets\Sounds\loud-incorrect-buzzer.mp3" CopyToOutputDirectory="Always" />
+		<EmbeddedResource Include="Assets\Sounds\modern-warfare-2-tactical-nuke-sound.mp3" CopyToOutputDirectory="Always" />
+		<EmbeddedResource Include="Assets\Sounds\nuclear-diarrhea.mp3" CopyToOutputDirectory="Always" />
+		<EmbeddedResource Include="Assets\Sounds\windows-11-error-sound.mp3" CopyToOutputDirectory="Always" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -6,6 +6,7 @@ using System.IO;
 using System.IO.Pipes;
 using System.Windows;
 using System.Windows.Forms;
+using Microsoft.Toolkit.Uwp.Notifications;
 
 namespace AnnoyingAgenda.Tray
 {
@@ -13,7 +14,8 @@ namespace AnnoyingAgenda.Tray
   {
     private NotifyIcon Tray = new();
 
-    NamedPipeClientStream ClientPipe = new(".",
+    NamedPipeClientStream ClientPipe = new(
+      ".",
       "AnnoyingAgenda",
       PipeDirection.In); //AnnoyingAgenda.Service is server side
 
@@ -34,25 +36,32 @@ namespace AnnoyingAgenda.Tray
       await ClientPipe.ConnectAsync();
 
       var Reader = new StreamReader(ClientPipe);
-      string ServiceMessage = await Reader.ReadLineAsync();
+      string? ServiceMessage = await Reader.ReadLineAsync();
 
       while(ClientPipe.IsConnected)
       {
         ServiceMessage = await Reader.ReadLineAsync();
-
+       
         if (!string.IsNullOrEmpty(ServiceMessage))
         {
-          if (ServiceMessage == "Close Apps")
+          if (ServiceMessage == "Close Apps") CloseDistractingApps();
+          else if (ServiceMessage == "Play Sound") PlaySound(ChooseSound());
+          else if(ServiceMessage.Contains("Message Box Notification:"))
           {
-            CloseApps();
+            System.Windows.MessageBox.Show(
+              ServiceMessage.Remove(0, "Message Box Notification:".Length),
+              "Overdue Task",
+              MessageBoxButton.OK,
+              MessageBoxImage.Hand);
           }
-          else if (ServiceMessage == "Play Sound")
+          else if (ServiceMessage.Contains("Toast Notification:"))
           {
-            PlaySound(ChooseSound());
-          }
-          else
-          {
-            System.Windows.MessageBox.Show(ServiceMessage, "Overdue Task", MessageBoxButton.OK, MessageBoxImage.Hand);
+            new ToastContentBuilder()
+              .AddText("Annnoying Agenda")
+              .AddText(ServiceMessage.Remove(0, "Toast Notification:".Length))
+              .SetToastScenario(ToastScenario.Reminder)
+              .SetToastDuration(ToastDuration.Short)
+              .Show();
           }
         }
       }
@@ -60,16 +69,16 @@ namespace AnnoyingAgenda.Tray
       App.Current.Shutdown();
     }
 
-    private void CloseApps()
+    private void CloseDistractingApps()
     {
-      string[] ClosableApps = [
+      string[] ClosableApps = [      
         "chrome", "chatgpt", "Discord",
         "minecraft.windows", "Minecraft", "opera",
         "firefox", "steam", "tiktok",
         "instagram", "XboxPcApp", "whatsapp",
-        "hulu","prime","disney",
-        "tubi","crunchyroll","paramount",
-        "espn","netflix", "roblox", "javaw"
+        "hulu", "prime", "disney",
+        "tubi", "crunchyroll", "paramount",
+        "espn", "netflix", "roblox", "javaw"
       ];
 
       try

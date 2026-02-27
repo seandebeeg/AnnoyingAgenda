@@ -15,8 +15,9 @@ namespace AnnoyingAgenda.Service
     private IOptionsMonitor<Settings> SettingsWatcher;
     private IOptionsMonitor<List<ToDoList>> ListWatcher;
     private object Sync = new();
+   
 
-    private NamedPipeServerStream ServicePipe = new( //Client side is AnnoyingAgenda.Tray
+    private static NamedPipeServerStream ServicePipe = new( //Client side is AnnoyingAgenda.Tray
        "AnnoyingAgenda",
        PipeDirection.Out,
        1,
@@ -96,40 +97,18 @@ namespace AnnoyingAgenda.Service
                   _logger.LogInformation("Client Connection Successful");
                 }
 
-                if (Item.TimesNotified >= 0 
-                  && ServiceSettings.SettingsItems.Contains(new SettingsItem { Name = "Notification Bomb", IsEnabled = true }))
-                {
-                  Item.TimesNotified++;
-                  SendToast(Item);
-                }
-
-                if (Item.TimesNotified >= 5
-                  && ServiceSettings.SettingsItems.Contains(new SettingsItem { Name = "Popup Spam", IsEnabled = true }))
-                {
-                  Item.TimesNotified++;
-                  SendMessageBox(Item);
-                }
-
-                if (Item.TimesNotified >= 10
-                  && ServiceSettings.SettingsItems.Contains(new SettingsItem { Name = "Play Sounds", IsEnabled = true }))
-                {
-                  Item.TimesNotified++;
-                  SendSoundRequest();
-                }
-
-                if (Item.TimesNotified >= 15
-                  && ServiceSettings.SettingsItems.Contains(new SettingsItem { Name = "Close Apps", IsEnabled = true }))
-                {
-                  Item.TimesNotified++;
-                  RequestAppClosure();
-                }
+                if (Item.TimesNotified >= 0) ExecuteNotificationLevel(1, Item);
+                if (Item.TimesNotified >= 5) ExecuteNotificationLevel(2, Item);
+                if (Item.TimesNotified >= 10) ExecuteNotificationLevel(3, Item);
+                if (Item.TimesNotified >= 15) ExecuteNotificationLevel(4, Item);
+                
 
                 Debug.WriteLine(Item.TimesNotified);
               }
             }
           }
         }
-        await Task.Delay(3000, stoppingToken);
+        await Task.Delay(60000, stoppingToken);
       }
     }
 
@@ -161,26 +140,83 @@ namespace AnnoyingAgenda.Service
       }
     }
 
-    private async void SendMessageBox(ToDoItem Item)
+    private async void ExecuteNotificationLevel(int Level, ToDoItem Item)
     {
+      Item.TimesNotified++;
+
+      if (Level == 1)
+      {
+        await SendToast(Item);
+      }
+      else if (Level == 2)
+      {
+        
+        await SendMessageBox(Item);
+      }
+      else if (Level == 3)
+      {
+       
+        await SendSoundRequest();
+      }
+      else if (Level == 4)
+      {
+       
+        await RequestAppClosure();
+      }
+    }
+
+    private async Task SendMessageBox(ToDoItem Item)
+    {
+      if (!ServicePipe.IsMessageComplete) ServicePipe.WaitForPipeDrain();
+
+      if (!ServiceSettings.SettingsItems.Contains(new SettingsItem
+      {
+        Name = "Popup Spam",
+        IsEnabled = true
+      })) return;
+
       var Writer = new StreamWriter(ServicePipe) { AutoFlush = true };
       await Writer.WriteLineAsync($"Message Box Notification:{Item.Name} due on {Item.DueDate:MM-dd-yyyy hh:mm}");
     }
 
-    private async void SendSoundRequest()
+    private async Task SendSoundRequest()
     {
+      if (!ServicePipe.IsMessageComplete) ServicePipe.WaitForPipeDrain();
+
+      if (!ServiceSettings.SettingsItems.Contains(new SettingsItem
+      {
+        Name = "Play Sounds",
+        IsEnabled = true
+      })) return;
+
       var Writer = new StreamWriter(ServicePipe) { AutoFlush = true };
       await Writer.WriteLineAsync($"Play Sound");
     }
 
-    private async void RequestAppClosure()
+    private async Task RequestAppClosure()
     {
+      if (!ServicePipe.IsMessageComplete) ServicePipe.WaitForPipeDrain();
+
+      if (!ServiceSettings.SettingsItems.Contains(new SettingsItem
+      {
+        Name = "Close Apps",
+        IsEnabled = true
+      })) return;
+
       var Writer = new StreamWriter(ServicePipe) { AutoFlush = true };
       await Writer.WriteLineAsync($"Close Apps");
     }
 
-    private async void SendToast(ToDoItem Item)
+    private async Task SendToast(ToDoItem Item)
     {
+      if (!ServicePipe.IsMessageComplete) ServicePipe.WaitForPipeDrain();
+
+      if (!ServiceSettings.SettingsItems.Contains(new SettingsItem
+      {
+        Name = "Notification Bomb",
+        IsEnabled = true
+      })) return;
+
       var Writer = new StreamWriter(ServicePipe) { AutoFlush = true };
       await Writer.WriteLineAsync($"Toast Notification:{Item.Name} due on {Item.DueDate:MM-dd-yyyy hh:mm}");
     }
