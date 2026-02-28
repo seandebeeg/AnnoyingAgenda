@@ -18,41 +18,57 @@
     <Popup Height="300" Width="450" IsOpen="False" Placement="Center" x:Name="NewEventPopup" StaysOpen="True" Panel.ZIndex="2">
       <Border BorderBrush="LightGray" BorderThickness="3" Background="White">
         <StackPanel>
-          <TextBlock Text="Event Name" HorizontalAlignment="Center" FontSize="30" FontFamily="Tw Cen MT Condensed"/>
-          <TextBox  x:Name="EventNameBox" Height="30" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontFamily="Tw Cen MT Condensed" FontSize="20"/>
-          <TextBlock Text="Reminder Date" HorizontalAlignment="Center" FontSize="30" FontFamily="Tw Cen MT Condensed"/>
-          <DatePicker FontFamily="Tw Cen MT Condensed" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="30" FontSize="20" x:Name="EventDatePicker"></DatePicker>
+          <TextBlock Text="Event Name" HorizontalAlignment="Center" FontSize="30" FontFamily="Segoe UI"/>
+          <TextBox x:Name="EventNameBox" Height="30" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontFamily="Segoe UI" FontSize="20" Foreground="#292929"/>
+
+          <TextBlock Text="Reminder Date" HorizontalAlignment="Center" FontSize="30" FontFamily="Segoe UI"/>
+          <DatePicker FontFamily="Segoe UI" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="30" FontSize="20" x:Name="EventDatePicker"></DatePicker>
+
           <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,0">
-            <TextBlock Text="Hour" FontFamily="Tw Cen MT Condensed" FontSize="30"/>
-            <ComboBox x:Name="HourSelector" FontFamily="Tw Cen MT" FontSize="30" Height="40" Width="120"></ComboBox>
-            <TextBlock Text="Minute" FontFamily="Tw Cen MT Condensed" FontSize="30" Margin="20,0,0,0"/>
-            <ComboBox x:Name="MinuteSelector" FontFamily="Tw Cen MT" FontSize="30" Height="40" Width="120"></ComboBox>
+            <TextBlock Text="Hour" FontFamily="Segoe UI" FontSize="30"/>
+            <ComboBox x:Name="HourSelector" FontFamily="Segoe UI" FontSize="30" Height="40" Width="120"></ComboBox>
+
+            <TextBlock Text="Minute" FontFamily="Segoe UI" FontSize="30" Margin="20,0,0,0"/>
+            <ComboBox x:Name="MinuteSelector" FontFamily="Segoe UI" FontSize="30" Height="40" Width="120"></ComboBox>
           </StackPanel>
+
           <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20,0,0">
-            <Button Content="Create" Click="CreateEvent" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,10,0" Style="{StaticResource WindowButtonTriggers}" Width="50"  Height="30" Background="LightGray"/>
-            <Button Content="Cancel" Click="CancelNewEventClick" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,0,0,0" Style="{StaticResource WindowButtonTriggers}" Width="50"  Height="30" Background="LightGray"/>
+            <Border BorderBrush="#e5e5e5" BorderThickness="3" CornerRadius="5" Margin="0,0,10,0" Height="30" Width="50">
+              <Button Content="Create" Click="CreateEvent" Style="{StaticResource WindowButtonTriggers}" Background="#fbfbfb"  Foreground="#292929"/>
+            </Border>
+
+            <Border BorderBrush="#e5e5e5" BorderThickness="3" CornerRadius="5" Margin="10,0,0,0" Height="30" Width="50">
+              <Button Content="Cancel" Click="CancelNewEventClick" Style="{StaticResource WindowButtonTriggers}" Background="#fbfbfb" Foreground="#292929"/>
+            </Border>
           </StackPanel>
-          
         </StackPanel>
       </Border>
     </Popup>
 
     <Popup Height="300" Width="450" IsOpen="False" Placement="Center" x:Name="EditEventPopup" StaysOpen="True">
-      <Border BorderBrush="LightGray" BorderThickness="3" Background="White">
+      <Border BorderBrush="LightGray" BorderThickness="3" Background="#f3f3f3">
         <StackPanel>
-          <TextBlock Text="Event Name" HorizontalAlignment="Center" FontSize="30" FontFamily="Tw Cen MT Condensed"/>
-          <TextBox  x:Name="EditNameBox" Height="30" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontFamily="Tw Cen MT Condensed" FontSize="20"/>
-          <TextBlock Text="Reminder Date" HorizontalAlignment="Center" FontSize="30" FontFamily="Tw Cen MT Condensed"/>
-          <DatePicker FontFamily="Tw Cen MT Condensed" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="30" FontSize="20" x:Name="EditDatePicker"></DatePicker>
+          <TextBlock Text="Event Name" HorizontalAlignment="Center" FontSize="30" FontFamily="Segoe UI"/>
+          <TextBox  x:Name="EditNameBox" Height="30" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontFamily="Segoe UI" FontSize="20"/>
+          
+          <TextBlock Text="Reminder Date" HorizontalAlignment="Center" FontSize="30" FontFamily="Segoe UI"/>
+          <DatePicker FontFamily="Segoe UI" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="30" FontSize="20" x:Name="EditDatePicker"></DatePicker>
+          
           <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,0">
-            <TextBlock Text="Hour" FontFamily="Tw Cen MT Condensed" FontSize="30"/>
-            <ComboBox x:Name="EditHourSelector" FontFamily="Tw Cen MT" FontSize="30" Height="40" Width="120"></ComboBox>
-            <TextBlock Text="Minute" FontFamily="Tw Cen MT Condensed" FontSize="30" Margin="20,0,0,0"/>
-            <ComboBox x:Name="EditMinuteSelector" FontFamily="Tw Cen MT" FontSize="30" Height="40" Width="120"></ComboBox>
+            <TextBlock Text="Hour" FontFamily="Segoe UI" FontSize="30"/>
+            <ComboBox x:Name="EditHourSelector" FontFamily="Segoe UI" FontSize="30" Height="40" Width="120"></ComboBox>
+            
+            <TextBlock Text="Minute" FontFamily="Segoe UI" FontSize="30" Margin="20,0,0,0"/>
+            <ComboBox x:Name="EditMinuteSelector" FontFamily="Segoe UI" FontSize="30" Height="40" Width="120"></ComboBox>
           </StackPanel>
           <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20,0,0">
-            <Button Content="Save" Click="ConfirmEdit" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,10,0" Style="{StaticResource WindowButtonTriggers}" Width="50"  Height="30" Background="LightGray"/>
-            <Button Content="Cancel" Click="CancelEditClick" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,0,0,0" Style="{StaticResource WindowButtonTriggers}" Width="50"  Height="30" Background="LightGray"/>
+            <Border BorderBrush="#e5e5e5" BorderThickness="3" CornerRadius="5" Margin="0,0,10,0" Height="30" Width="50">
+              <Button Content="Save" Click="ConfirmEdit" Style="{StaticResource WindowButtonTriggers}" Background="#fbfbfb"  Foreground="#292929"/>
+            </Border>
+
+            <Border BorderBrush="#e5e5e5" BorderThickness="3" CornerRadius="5" Margin="10,0,0,0" Height="30" Width="50">
+              <Button Content="Cancel" Click="CancelEditClick" Style="{StaticResource WindowButtonTriggers}" Background="#fbfbfb" Foreground="#292929"/>
+            </Border>
           </StackPanel>
 
         </StackPanel>
@@ -62,12 +78,19 @@
     <Popup Height="400" Width="600" Placement="Center" x:Name="SearchPopup" StaysOpen="True" IsOpen="False">
       <Border BorderBrush="LightGray" BorderThickness="3" Background="White">
         <StackPanel>
-          <TextBlock Text="Search Term" HorizontalAlignment="Center" FontSize="30" FontFamily="Tw Cen MT Condensed"/>
-          <TextBox x:Name="SearchBox" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="30" FontSize="30" FontFamily="Tw Cen MT Condensed"/>
+          <TextBlock Text="Search Term" HorizontalAlignment="Center" FontSize="30" FontFamily="Segoe UI" Foreground="#292929"/>
+          <TextBox x:Name="SearchBox" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="30" FontSize="20" FontFamily="Segoe UI"/>
+          
           <StackPanel Orientation="Horizontal" Margin="0,20,0,0" HorizontalAlignment="Center">
-            <Button Content="Search" Click="SearchForEvents" HorizontalAlignment="Center" Height="30" Width="50" Background="LightGray" Style="{StaticResource WindowButtonTriggers}" Margin="0,0,10,10"/>
-            <Button Content="Exit" Click="CancelSearchClick" HorizontalAlignment="Center" Height="30" Width="50" Background="LightGray" Style="{StaticResource WindowButtonTriggers}" Margin="10,0,0,10"/>
+            <Border BorderBrush="#e5e5e5" BorderThickness="3" CornerRadius="5" Margin="0,0,10,0" Height="30" Width="50">
+              <Button Content="Search" Click="SearchForEvents" Background="#fbfbfb" Style="{StaticResource WindowButtonTriggers}" FontFamily="Segoe UI" Foreground="#292929"/>
+            </Border>
+            
+            <Border BorderBrush="#e5e5e5" BorderThickness="3" CornerRadius="5" Margin="10,0,0,0" Height="30" Width="50">
+              <Button Content="Exit" Click="CancelSearchClick" Background="#fbfbfb" Style="{StaticResource WindowButtonTriggers}" FontFamily="Segoe UI" Foreground="#292929"/>
+            </Border>
           </StackPanel>
+          
           <ScrollViewer VerticalScrollBarVisibility="Auto" CanContentScroll="True">
             <StackPanel x:Name="SearchResultPanel" CanVerticallyScroll="True"></StackPanel>
           </ScrollViewer>
@@ -81,15 +104,44 @@
    
 
     <StackPanel Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Center">
-      <Button Style="{StaticResource WindowButtonTriggers}" Width="75" Height="50" Margin="0,0,20,10" Foreground="White" VerticalAlignment="Bottom" HorizontalAlignment="Left" Content="Save" Background="LightGreen" Click="SaveClick"/>
-      <Button Style="{StaticResource WindowButtonTriggers}" Width="75" Height="50" Margin="20,0,0,10" Foreground="White" VerticalAlignment="Bottom" HorizontalAlignment="Right" Content="Quit" Background="Red" Click="QuitButton"/>
+      <Border Width="80" Height="40" Margin="0,0,20,10" VerticalAlignment="Bottom" HorizontalAlignment="Left" BorderBrush="#D1FFBD" BorderThickness="3" CornerRadius="5">
+        <Button Style="{StaticResource WindowButtonTriggers}" Foreground="White" Content="Save" Background="LightGreen" Click="SaveClick"/>
+      </Border>
+      <Border Width="80" Height="40" Margin="20,0,0,10" VerticalAlignment="Bottom" HorizontalAlignment="Right" BorderBrush="#FF474C" BorderThickness="3" CornerRadius="5">
+        <Button Style="{StaticResource WindowButtonTriggers}" Foreground="White" Content="Quit" Background="Red" Click="QuitButton"/>
+      </Border>
     </StackPanel>
+    
     <Border Grid.Column="1" BorderBrush="LightGray" CornerRadius="10" BorderThickness="1" Margin="0,0,10,3">
       <StackPanel VerticalAlignment="Center" Margin="0,0,0,40" CanVerticallyScroll="True">
-        <Button Style="{StaticResource WindowButtonTriggers}" Content="New Event" Click="NewEventButton" FontFamily="Tw Cen MT Condensed" FontSize="40" Height="40" Width="150" Background="LightGray" Margin="0,0,0,10" MouseEnter="MouseOverAnimation" MouseLeave="MouseLeaveAnimation"/>
-        <Button Style="{StaticResource WindowButtonTriggers}" x:Name="DeleteButton"  Content="Delete Event" Click="ToggleDeletionMode" FontFamily="Tw Cen MT Condensed" FontSize="40" Height="40" Width="150" Background="LightGray" Margin="0,0,0,10" MouseEnter="MouseOverAnimation" MouseLeave="MouseLeaveAnimation"/>
-        <Button Style="{StaticResource WindowButtonTriggers}" x:Name="EditButton" Content="Edit Event" Click="ToggleEditMode" FontFamily="Tw Cen MT Condensed" FontSize="40" Height="40" Width="150" Background="LightGray" Margin="0,0,0,10" MouseEnter="MouseOverAnimation" MouseLeave="MouseLeaveAnimation"/>
-        <Button Style="{StaticResource WindowButtonTriggers}" Content="Search" Click="SearchClick" FontFamily="Tw Cen MT Condensed" FontSize="40" Height="40" Width="150" Background="LightGray" Margin="0,0,0,10" MouseEnter="MouseOverAnimation" MouseLeave="MouseLeaveAnimation"/>
+        <Border Height="50" Width="150" Margin="0,0,0,10"  BorderThickness="3" CornerRadius="5" BorderBrush="#e5e5e5" MouseEnter="MouseOverAnimation" MouseLeave="MouseLeaveAnimation">
+          <Button Style="{StaticResource WindowButtonTriggers}" 
+            Content="New Event" 
+            Click="NewEventButton"
+            FontFamily="Segoe UI" FontSize="30" 
+            Background="#fbfbfb" Foreground="#292929"/>
+        </Border>
+        <Border Height="50" Width="150" Margin="0,0,0,10" BorderThickness="3" CornerRadius="5" BorderBrush="#e5e5e5" MouseEnter="MouseOverAnimation" MouseLeave="MouseLeaveAnimation">
+          <Button Style="{StaticResource WindowButtonTriggers}" 
+            x:Name="DeleteButton" Content="Delete Event"
+            Click="ToggleDeletionMode"
+            FontFamily="Segoe UI" FontSize="25" 
+            Background="#fbfbfb" Foreground="#292929"/>
+        </Border>
+        <Border Height="50" Width="150" Margin="0,0,0,10"  BorderThickness="3" CornerRadius="5" BorderBrush="#e5e5e5" MouseEnter="MouseOverAnimation" MouseLeave="MouseLeaveAnimation">
+          <Button Style="{StaticResource WindowButtonTriggers}"
+            x:Name="EditButton" Content="Edit Event"
+            Click="ToggleEditMode"
+            FontFamily="Segoe UI" FontSize="30"
+            Background="#fbfbfb" Foreground="#292929"/>
+        </Border>
+        <Border Height="50" Width="150" Margin="0,0,0,10" BorderThickness="3" CornerRadius="5" BorderBrush="#e5e5e5" MouseEnter="MouseOverAnimation" MouseLeave="MouseLeaveAnimation">
+          <Button Style="{StaticResource WindowButtonTriggers}"
+            Content="Search"
+            Click="SearchClick"
+            FontFamily="Segoe UI" FontSize="30"
+            Background="#fbfbfb" Foreground="#292929"/>
+        </Border>
       </StackPanel>
     </Border>
   </Grid>

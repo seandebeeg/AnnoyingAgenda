@@ -13,7 +13,7 @@
       <RowDefinition Height="80"/>
       <RowDefinition Height="*"/>
     </Grid.RowDefinitions>
-    <TextBlock Text="Lists" FontSize="75" Grid.Row="0" HorizontalAlignment="Center" FontFamily="Tw Cen MT Condensed"/>
+    <TextBlock Text="Lists" FontSize="60" Grid.Row="0" HorizontalAlignment="Center" FontFamily="Segoe UI" Foreground="#292929"/>
     <Popup IsOpen="False" StaysOpen="True" Height="200" Width="450" Grid.Row="1" Placement="Center" x:Name="NewListPopup">
       <Border BorderBrush="LightGray" BorderThickness="3" Background="White">
         <StackPanel Background="White">
@@ -37,10 +37,13 @@
         <StackPanel Grid.Row="0" x:Name="ListSelectPanel" CanVerticallyScroll="True" Orientation="Vertical"></StackPanel>
       </ScrollViewer>
       <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
-        <Button Height="75" Width="200" Style="{StaticResource WindowButtonTriggers}" FontFamily="Tw Cen MT Condensed" FontSize="45" Background="LightGray" Click="NewListButton" Margin="0,0,10,0" HorizontalAlignment="Center" VerticalAlignment="Center">New List</Button>
-        <Button Height="75" Width="200" Style="{StaticResource WindowButtonTriggers}" FontFamily="Tw Cen MT Condensed" FontSize="30" Background="LightGray" Click="HomeMenuButton" Margin="10,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center">Back to Home Menu</Button>
+        <Border Height="75" Width="200" Margin="0,0,10,0" BorderThickness="5" BorderBrush="#e5e5e5" CornerRadius="5">
+          <Button Style="{StaticResource WindowButtonTriggers}" FontFamily="Segoe UI" FontSize="35" Background="#fbfbfb" Click="NewListButton">New List</Button>
+        </Border>
+        <Border Height="75" Width="200" Margin="10,0,0,0" BorderThickness="5" BorderBrush="#e5e5e5" CornerRadius="5">
+          <Button Style="{StaticResource WindowButtonTriggers}" FontFamily="Segoe UI" FontSize="20" Background="#fbfbfb" Click="HomeMenuButton">Back to Home Menu</Button>
+        </Border>
       </StackPanel>
-      
     </Grid>
   </Grid>
 </Page>

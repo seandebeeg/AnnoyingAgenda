@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:AnnoyingAgenda.Client"
         mc:Ignorable="d"
         WindowStyle="None"
+        Background="#f3f3f3"
         Loaded="Window_Loaded"
         Height="450" Width="800"
         MinHeight="340" MinWidth="780">
@@ -29,9 +30,9 @@
         <ColumnDefinition Width="48"/>
       </Grid.ColumnDefinitions>
 
-      <Border Grid.Column="0" Opacity="1" MouseDown="DragWindow" x:Name="DragButton" Background="White">
+      <Border Grid.Column="0" Opacity="1" MouseDown="DragWindow" x:Name="DragButton" Background="Transparent">
         <StackPanel Orientation="Horizontal">
-          <TextBlock Text="{Binding Title, RelativeSource={RelativeSource AncestorType=Window}}" FontSize="20" FontFamily="Tw Cen MT Condensed" Foreground="Black" Margin="20,0,0,0"/>
+          <TextBlock Text="{Binding Title, RelativeSource={RelativeSource AncestorType=Window}}" FontSize="20" FontFamily="Segoe UI" Foreground="#292929" Margin="20,0,0,0"/>
         </StackPanel>
       </Border>
 
@@ -45,7 +46,8 @@
         <Image Source="/Assets/Buttons/AnnoyingAgenda-Button-Close.png"></Image>
       </Button>
     </Grid>
-    
-    <Frame x:Name="MainNavigation" NavigationUIVisibility="Hidden" Grid.Row="1"/>
+    <Border BorderBrush="LightGray" CornerRadius="10" BorderThickness="1" Grid.Row="1">
+      <Frame x:Name="MainNavigation" NavigationUIVisibility="Hidden"/>
+    </Border>
   </Grid>
 </Window>

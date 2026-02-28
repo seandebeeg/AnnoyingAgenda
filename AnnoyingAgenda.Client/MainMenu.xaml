@@ -8,15 +8,17 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="MainMenu">
 
+  <Grid>
     <Grid>
-    <Border Grid.Row="1" BorderBrush="LightGray" CornerRadius="10" BorderThickness="1">
-      <Grid>
-        <TextBlock Text="Welcome" HorizontalAlignment="Center" FontSize="50" FontWeight="UltraBold" FontFamily="Tw Cen MT Condensed"/>
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-          <Button Height="75" Width="150" HorizontalAlignment="Right" Content="Lists" FontSize="30" FontWeight="UltraBold" FontFamily="Tw Cen MT Condensed" Margin="0,0,25,0" Style="{StaticResource WindowButtonTriggers}" Background="LightGray" Click="ListsClick"/>
-          <Button Height="75" Width="150" HorizontalAlignment="Left" Content="Settings" FontSize="30" FontWeight="UltraBold" FontFamily="Tw Cen MT Condensed" Margin="25,0,0,0" Style="{StaticResource WindowButtonTriggers}" Background="LightGray" Click="SettingsClick"/>
-        </StackPanel>
-      </Grid>
-    </Border>
+      <TextBlock Text="Welcome" HorizontalAlignment="Center" FontSize="50" FontFamily="Segoe UI"/>
+      <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+        <Border BorderBrush="#e5e5e5" BorderThickness="3" CornerRadius="5" Margin="0,0,25,0" Height="75" Width="150">
+          <Button  HorizontalAlignment="Stretch" Content="Lists" FontSize="30" FontFamily="Segoe UI"  Style="{StaticResource WindowButtonTriggers}" Background="#fbfbfb" Click="ListsClick" Foreground="#292929"/>
+        </Border>
+        <Border BorderBrush="#e5e5e5" BorderThickness="3" CornerRadius="5" Margin="25,0,0,0" Height="75" Width="150">
+          <Button Height="75" Width="150" HorizontalAlignment="Stretch" Content="Settings" FontSize="30" FontFamily="Segoe UI" Style="{StaticResource WindowButtonTriggers}" Background="#fbfbfb" Click="SettingsClick" Foreground="#292929"/>
+        </Border>
+      </StackPanel>
+    </Grid>
   </Grid>
 </Page>

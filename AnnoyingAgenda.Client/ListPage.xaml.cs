@@ -5,7 +5,6 @@ using System.IO;
 using System.Windows.Media;
 using System.Windows;
 using System.Windows.Controls;
-using System.Diagnostics;
 
 namespace AnnoyingAgenda.Client
 {
@@ -39,7 +38,7 @@ namespace AnnoyingAgenda.Client
           {
             CornerRadius = new CornerRadius(10),
             BorderThickness = new Thickness(5),
-            BorderBrush = Brushes.DarkGray,
+            BorderBrush = (Brush)new BrushConverter().ConvertFromString("#e5e5e5"),
             Margin = new Thickness(0, 0, 0, 5),
             HorizontalAlignment = HorizontalAlignment.Stretch,
           };
@@ -49,9 +48,10 @@ namespace AnnoyingAgenda.Client
             Content = List.Name + " - " + List.Purpose,
             Height = 60,
             FontSize = 30,
-            FontFamily = new FontFamily("Tw Cen MT Condensed"),
+            FontFamily = new FontFamily("Segoe UI"),
             Style = (Style)this.FindResource("WindowButtonTriggers"),
-            Background = Brushes.LightGray,
+            Background = (Brush) new BrushConverter().ConvertFromString("#fbfbfb"),
+            Foreground = (Brush) new BrushConverter().ConvertFromString("#292929"),
             HorizontalContentAlignment = HorizontalAlignment.Stretch
           };
 

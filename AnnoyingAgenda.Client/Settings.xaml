@@ -14,17 +14,17 @@
       <RowDefinition Height="*"/>
       <RowDefinition Height="50"/>
     </Grid.RowDefinitions>
-    <TextBlock Text="Settings" Height="75" FontSize="50" FontFamily="Tw Cen MT Condensed" HorizontalAlignment="Center" Grid.Row="0"/>
+    <TextBlock Text="Settings" Height="75" FontSize="40" FontFamily="Segoe UI" HorizontalAlignment="Center" Grid.Row="0"/>
 
     <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Visible">
       <StackPanel CanVerticallyScroll="True">
-        <TextBlock Text="Service" FontFamily="Tw Cen MT Condensed" FontSize="30"/>
-        <ListView x:Name="SettingsList" VerticalAlignment="Stretch" ScrollViewer.VerticalScrollBarVisibility="Auto" BorderBrush="Transparent" Margin="10,0,0,0">
+        <TextBlock Text="Service" FontFamily="Segoe UI" FontSize="20"/>
+        <ListView x:Name="SettingsList" VerticalAlignment="Stretch" ScrollViewer.VerticalScrollBarVisibility="Auto" BorderBrush="Transparent" Margin="10,0,0,0" Background="#f3f3f3">
           <ListView.ItemTemplate>
             <DataTemplate>
               <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
                 <CheckBox IsChecked="{Binding IsEnabled}"/>
-                <TextBlock Text="{Binding Name}" Margin="5,0,0,0" FontFamily="Tw Cen MT Condensed" FontSize="15"/>
+                <TextBlock Text="{Binding Name}" Margin="5,0,0,0" FontFamily="Segoe UI" FontSize="15"/>
               </StackPanel>
             </DataTemplate>
           </ListView.ItemTemplate>
@@ -32,9 +32,26 @@
       </StackPanel>
     </ScrollViewer>
     <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Center">
-      <Button x:Name="InstallationButton" Content="Install Service" Width="100" Style="{StaticResource WindowButtonTriggers}" Height="30" Background="LightGray" HorizontalAlignment="Left" FontFamily="Tw Cen MT Condensed" FontSize="20" Margin="0,0,20,0"/>
-      <Button Content="Save Settings" Click="SaveSettings" Margin="20,0,20,0" Width="120" Height="30" Style="{StaticResource WindowButtonTriggers}" Background="LightGray" FontFamily="Tw Cen MT Condensed" FontSize="20"/>
-      <Button Content="Back To Main Menu" Click="MainMenuClick" Width="120" Margin="20,0,0,0" Height="30" Style="{StaticResource WindowButtonTriggers}" Background="LightGray" FontFamily="Tw Cen MT Condensed" FontSize="20"/>
+      <Border Width="120" Height="30" Margin="0,0,20,0" BorderThickness="3" CornerRadius="5" BorderBrush="#e5e5e5">
+        <Button x:Name="InstallationButton" Content="Install Service"
+          Style="{StaticResource WindowButtonTriggers}" 
+          Background="#fbfbfb" Foreground="#292929"
+          FontFamily="Segoe UI" FontSize="15"/>
+      </Border>
+      <Border Width="120" Height="30" Margin="20,0,20,0" BorderThickness="3" CornerRadius="5" BorderBrush="#e5e5e5">
+        <Button Content="Save Settings" 
+          Click="SaveSettings" 
+          Style="{StaticResource WindowButtonTriggers}"
+          Background="#fbfbfb" Foreground="#292929"
+          FontFamily="Segoe UI" FontSize="15"/>
+      </Border>
+      <Border Width="120" Height="30" Margin="20,0,0,0" BorderThickness="3" CornerRadius="5" BorderBrush="#e5e5e5">
+        <Button Content="Back To Main Menu"
+          Click="MainMenuClick" 
+          Style="{StaticResource WindowButtonTriggers}" 
+          Background="#fbfbfb" Foreground="#292929"
+          FontFamily="Segoe UI" FontSize="13"/>
+      </Border>
     </StackPanel>
   </Grid>
 </Page>

@@ -106,7 +106,7 @@ namespace AnnoyingAgenda.Client
 
     private void MouseOverAnimation(object sender, MouseEventArgs e)
     {
-      Button HoveredButton = (Button)e.Source;
+      Border HoveredButton = (Border)e.Source;
 
       ThicknessAnimation LeftMarginAnimation = new()
       {
@@ -125,7 +125,7 @@ namespace AnnoyingAgenda.Client
 
     private void MouseLeaveAnimation(object sender, MouseEventArgs e)
     {
-      Button HoveredButton = (Button)e.Source;
+      Border HoveredButton = (Border)e.Source;
 
       ThicknessAnimation LeftMarginAnimation = new()
       {
@@ -266,8 +266,11 @@ namespace AnnoyingAgenda.Client
     private void DeleteEvent(object sender, RoutedEventArgs e) 
     {
       bool WasSearchOpen = SearchPopup.IsOpen;
+
       if (WasSearchOpen) SearchPopup.IsOpen = false;
+
       MessageBoxResult DeletionConfirmation = MessageBox.Show("This action deletes the task", "Confirm Deletion", MessageBoxButton.OKCancel, MessageBoxImage.Exclamation);
+
       if (WasSearchOpen) SearchPopup.IsOpen = true;
       if (DeletionConfirmation == MessageBoxResult.OK)
       {
@@ -283,6 +286,7 @@ namespace AnnoyingAgenda.Client
     {
       Button TaskButton = (Button)e.Source;
       ToDoItem ToDo = GetToDo(sender, e);
+
       ChangingItem = ToDo;
 
       EditNameBox.Text = ToDo.Name;
@@ -297,6 +301,7 @@ namespace AnnoyingAgenda.Client
     {
       ToDoItem EditedTodo = GetToDo(ChangingItem.Name, ChangingItem.DueDate);
       ToDoItem NewTodo = ChangingItem;
+
       Button EditedTaskButton = GetToDoButton(ChangingItem.Name, ChangingItem.DueDate);
       Button NewTaskButton = new();
 
@@ -332,6 +337,7 @@ namespace AnnoyingAgenda.Client
 
       CurrentList.ListItems.Remove(EditedTodo);
       CurrentList.ListItems.Add(NewTodo);
+
       TaskPanel.Children.Remove(EditedTaskButton);
       TaskPanel.Children.Add(NewTaskButton);
 
@@ -354,9 +360,10 @@ namespace AnnoyingAgenda.Client
     private void MarkAsComplete(object sender, RoutedEventArgs e)
     {
       ToDoItem CompletedToDo = GetToDo(sender, e);
-      CompletedToDo.IsComplete = CompletedToDo.IsComplete ? false: true;
       Button TaskButton = (Button)e.Source;
-      TaskButton.Background = CompletedToDo.IsComplete ? Brushes.LightGreen : Brushes.LightGray;
+
+      CompletedToDo.IsComplete = CompletedToDo.IsComplete ? false: true;
+      TaskButton.Background = CompletedToDo.IsComplete ? Brushes.LightGreen : (Brush)new BrushConverter().ConvertFromString("#fbfbfb");
     }
 
     private Button CreateToDoButton(string name, DateTime date)
@@ -368,9 +375,10 @@ namespace AnnoyingAgenda.Client
         Content = name + TaskDateSeparator + date.ToString(TaskDateFormat),
         Height = 40,
         HorizontalAlignment = HorizontalAlignment.Stretch,
-        FontSize = 30,
-        FontFamily = new FontFamily("Tw Cen MT Condensed"),
-        Background = MatchingToDo.IsComplete? Brushes.LightGreen : Brushes.LightGray,
+        FontSize = 20,
+        FontFamily = new FontFamily("Segoe UI"),
+        Foreground = (Brush) new BrushConverter().ConvertFromString("#292929"),
+        Background = MatchingToDo.IsComplete? Brushes.LightGreen : (Brush)new BrushConverter().ConvertFromString("#fbfbfb"),
         Margin = new Thickness(0, 0, 0, 5),
         Style = (Style)this.FindResource("WindowButtonTriggers")
       };
@@ -394,6 +402,7 @@ namespace AnnoyingAgenda.Client
     {
       ToDoItem Event = GetToDo(name, date);
       Button TaskButton = new();
+
       foreach(Button ListButton in TaskPanel.Children)
       {
         string ButtonContent = name + TaskDateSeparator + date.ToString(TaskDateFormat);
