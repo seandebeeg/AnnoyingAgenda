@@ -5,6 +5,7 @@ using System.IO;
 using System.Windows.Media;
 using System.Windows;
 using System.Windows.Controls;
+using System.Diagnostics;
 
 namespace AnnoyingAgenda.Client
 {
@@ -12,6 +13,8 @@ namespace AnnoyingAgenda.Client
   {
     private MainWindow ParentWindow;
     private List<ToDoList>? AllLists = [];
+    private ToDoList? SelectedList;
+    private Button ListButton;
     public ListPage(MainWindow _parentWindow)
     {
       InitializeComponent();
@@ -55,7 +58,7 @@ namespace AnnoyingAgenda.Client
             HorizontalContentAlignment = HorizontalAlignment.Stretch
           };
 
-          ListSelectButton.Click += OpenList;
+          ListSelectButton.Click += ToggleListPopup;
           ListSelectButtonBorder.Child = ListSelectButton;
 
           ListSelectPanel.Children.Add(ListSelectButtonBorder);
@@ -63,14 +66,62 @@ namespace AnnoyingAgenda.Client
       }
     }
 
-    private void OpenList(object sender, RoutedEventArgs e)
+    private void ToggleListPopup(object sender, RoutedEventArgs e) 
     {
-      Button ListButton = (Button)e.Source;
+      ListPopup.IsOpen = (ListPopup.IsOpen) ? false : true;
 
+      if (!ListPopup.IsOpen) return;
+
+      ListButton = (Button)e.Source;
+
+      Debug.WriteLine(ListButton.Opacity);
+     
       string NameAndPurpose = (string)ListButton.Content;
       string Name = NameAndPurpose.Split(" - ")[0];
 
       ToDoList SelectedList = AllLists.Find(L => L.Name == Name);
+
+      this.SelectedList = SelectedList;
+    }
+
+    private void DeleteList(object sender, RoutedEventArgs e)
+    {
+      AllLists.Remove(SelectedList);
+
+      var JsonFilePath = Path.Combine(
+        Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
+        "Annoying Agenda",
+        "Lists.json");
+
+      if (!File.Exists(JsonFilePath) || string.IsNullOrWhiteSpace(File.ReadAllText(JsonFilePath)))
+      {
+        File.WriteAllText(
+          JsonFilePath,
+          JsonSerializer.Serialize(new List<ToDoList>(), new JsonSerializerOptions() { WriteIndented = true }));
+      }
+      else
+      {
+        JsonNode? ListNode = JsonNode.Parse(File.ReadAllText(JsonFilePath));
+        JsonArray JsonListArray = new();
+
+        Debug.WriteLine(ListButton);
+
+        foreach (ToDoList List in AllLists)
+        {
+          JsonListArray.Add(List);
+        }
+
+        ListNode["AllLists"] = JsonListArray;
+
+        File.WriteAllText(JsonFilePath, JsonSerializer.Serialize(ListNode, new JsonSerializerOptions { WriteIndented = true}));
+
+        ParentWindow.MainNavigation.Navigate(new ListPage(ParentWindow));
+      }
+    }
+
+    private void OpenList(object sender, RoutedEventArgs e)
+    {
+      this.SelectedList = SelectedList;
 
       ParentWindow.MainNavigation.Navigate(new ListEditor(ParentWindow, SelectedList));
     }
