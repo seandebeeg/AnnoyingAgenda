@@ -59,13 +59,25 @@
     <Popup IsOpen="False" StaysOpen="True" Height="200" Width="450" Grid.Row="1" Placement="Center" x:Name="NewListPopup">
       <Border BorderBrush="LightGray" BorderThickness="3" Background="White">
         <StackPanel Background="White">
-          <TextBlock Text="Name" FontFamily="Tw Cen MT Condensed" HorizontalAlignment="Center" FontSize="30"/>
-          <TextBox MaxLines="1" FontFamily="Tw Cen MT Condensed" x:Name="ListName" FontSize="30"/>
-          <TextBlock Text="Purpose" FontFamily="Tw Cen MT Condensed" HorizontalAlignment="Center" FontSize="30"/>
-          <TextBox MaxLines="1" FontFamily="Tw Cen MT Condensed" x:Name="ListPurpose" FontSize="30"/>
+          <TextBlock Text="Name" FontFamily="Segoe UI" HorizontalAlignment="Center" FontSize="25"/>
+          <TextBox MaxLines="1" FontFamily="Segoe UI" x:Name="ListName" FontSize="20" HorizontalContentAlignment="Center"/>
+          <TextBlock Text="Purpose" FontFamily="Segoe UI" HorizontalAlignment="Center" FontSize="25"/>
+          <TextBox MaxLines="1" FontFamily="Segoe UI" x:Name="ListPurpose" FontSize="20" HorizontalContentAlignment="Center"/>
           <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20,0,0">
-            <Button Content="Create" Click="CreatePopupButton" Margin="0,0,10,0" Style="{StaticResource WindowButtonTriggers}" Width="50"  Height="30" Background="LightGray"/>
-            <Button Content="Cancel" Click="CancelPopupButton" Margin="10,0,0,0" Style="{StaticResource WindowButtonTriggers}" Width="50"  Height="30" Background="LightGray"/>
+            <Border Height="30" Width="50" Margin="0,0,10,10" BorderThickness="3" BorderBrush="#e5e5e5" CornerRadius="5">
+              <Button Content="Create" 
+                Click="CreatePopupButton" 
+                FontFamily="Segoe UI"
+                Style="{StaticResource WindowButtonTriggers}"
+                Background="#fbfbfb" Foreground="#292929"/>  
+            </Border>
+            <Border Height="30" Width="50" Margin="10,0,0,10" BorderThickness="3" BorderBrush="#e5e5e5" CornerRadius="5">
+              <Button Content="Cancel" 
+                Click="CancelPopupButton"
+                FontFamily="Segoe UI"
+                Style="{StaticResource WindowButtonTriggers}"
+                Background="#fbfbfb" Foreground="#292929"/>
+            </Border>
           </StackPanel>
         </StackPanel>
       </Border>

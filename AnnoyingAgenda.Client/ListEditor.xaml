@@ -105,10 +105,10 @@
 
     <StackPanel Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Center">
       <Border Width="80" Height="40" Margin="0,0,20,10" VerticalAlignment="Bottom" HorizontalAlignment="Left" BorderBrush="#D1FFBD" BorderThickness="3" CornerRadius="5">
-        <Button Style="{StaticResource WindowButtonTriggers}" Foreground="White" Content="Save" Background="LightGreen" Click="SaveClick"/>
+        <Button Style="{StaticResource WindowButtonTriggers}" Foreground="#e5e5e5" FontFamily="Segoe UI" FontSize="20" Content="Save" Background="LightGreen" Click="SaveClick"/>
       </Border>
       <Border Width="80" Height="40" Margin="20,0,0,10" VerticalAlignment="Bottom" HorizontalAlignment="Right" BorderBrush="#FF474C" BorderThickness="3" CornerRadius="5">
-        <Button Style="{StaticResource WindowButtonTriggers}" Foreground="White" Content="Quit" Background="Red" Click="QuitButton"/>
+        <Button Style="{StaticResource WindowButtonTriggers}" Foreground="#e5e5e5" FontFamily="Segoe UI" FontSize="20" Content="Quit" Background="Red" Click="QuitButton"/>
       </Border>
     </StackPanel>
     

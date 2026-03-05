@@ -120,8 +120,6 @@ namespace AnnoyingAgenda.Client
         return;
       }
 
-      Process.Start("AnnoyingAgenda.Tray.exe");
-
       PowerShell PS = PowerShell.Create();
 
       PS.AddCommand("New-Service")
