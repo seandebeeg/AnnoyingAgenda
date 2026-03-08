@@ -19,37 +19,34 @@ namespace AnnoyingAgenda.Tray
       "AnnoyingAgenda",
       PipeDirection.In); //AnnoyingAgenda.Service is server side
 
-    protected override async void OnStartup(StartupEventArgs e)
+    private App()
     {
-      base.OnStartup(e);
-
       RegistryKey StartupRegistry = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
 
-      StartupRegistry.SetValue("AnnoyingAgenda.Tray", System.Windows.Forms.Application.ExecutablePath);
+      if (StartupRegistry.GetValueNames().Contains("AnnoyingAgenda"))
+      {
+        StartupRegistry.SetValue("AnnoyingAgenda.Tray", System.Windows.Forms.Application.ExecutablePath);
+      }
 
-      Tray = new();
+      StartupRegistry.Close();
 
-      Tray.Icon = Icon.ExtractAssociatedIcon(System.Windows.Forms.Application.ExecutablePath);
-      Tray.Visible = true;
-      Tray.DoubleClick += (s, args) => Process.Start("AnnoyingAgenda.Client.exe");
-
-      await ClientPipe.ConnectAsync();
+      ClientPipe.Connect();
 
       var Reader = new StreamReader(ClientPipe);
-      string? ServiceMessage = await Reader.ReadLineAsync();
+      string? ServiceMessage = Reader.ReadLine();
 
-      while(ClientPipe.IsConnected)
+      while (ClientPipe.IsConnected)
       {
-        ServiceMessage = await Reader.ReadLineAsync();
-       
+        ServiceMessage = Reader.ReadLine();
+
         if (!string.IsNullOrEmpty(ServiceMessage))
         {
           if (ServiceMessage == "Close Apps") CloseDistractingApps();
           else if (ServiceMessage == "Play Sound") PlaySound(ChooseSound());
-          else if(ServiceMessage.Contains("Message Box Notification:"))
+          else if (ServiceMessage.Contains("Message Box:"))
           {
             System.Windows.MessageBox.Show(
-              ServiceMessage.Remove(0, "Message Box Notification:".Length),
+              ServiceMessage.Remove(0, "Message Box:".Length),
               "Overdue Task",
               MessageBoxButton.OK,
               MessageBoxImage.Hand);
@@ -67,11 +64,12 @@ namespace AnnoyingAgenda.Tray
       }
 
       App.Current.Shutdown();
-    }
+    } 
+    
 
     private void CloseDistractingApps()
     {
-      string[] ClosableApps = [      
+      string[] ClosableApps = [
         "chrome", "chatgpt", "Discord",
         "minecraft.windows", "Minecraft", "opera",
         "firefox", "steam", "tiktok",
@@ -89,7 +87,7 @@ namespace AnnoyingAgenda.Tray
 
           foreach (Process AppProcess in AppProcesses)
           {
-            AppProcess.Kill(); 
+            AppProcess.Kill();
           }
         }
       }
@@ -101,6 +99,8 @@ namespace AnnoyingAgenda.Tray
 
     private void PlaySound(string FileName)
     {
+      Debug.WriteLine(FileName);
+
       AudioFileReader Reader = new(Path.Combine("Assets", "Sounds", FileName));
       WaveOutEvent Player = new();
 
@@ -119,39 +119,21 @@ namespace AnnoyingAgenda.Tray
       int ChosenNumber = RandomNumber.Next(1, 11);
       string FileName = string.Empty;
 
-      switch (ChosenNumber)
+      FileName = ChosenNumber switch
       {
-        case 1:
-          FileName = "america-eagle-gunshots.mp3";
-          break;
-        case 2:
-          FileName = "and-his-name-is-john-cena-1_3.mp3";
-          break;
-        case 3:
-          FileName = "door-knocking-very-realistic.mp3";
-          break;
-        case 4:
-          FileName = "eas-sound.mp3";
-          break;
-        case 5:
-          FileName = "hl2-stalker-scream.mp3";
-          break;
-        case 6:
-          FileName = "loud-explosion.mp3";
-          break;
-        case 7:
-          FileName = "loud-incorrect-buzzer.mp3";
-          break;
-        case 8:
-          FileName = "modern-warfare-2-tactical-nuke-sound.mp3";
-          break;
-        case 9:
-          FileName = "nuclear-diarrhea.mp3";
-          break;
-        case 10:
-          FileName = "windows-11-error-sound.mp3";
-          break;
-      }
+        1 => "america-eagle-gunshots.mp3",
+        2 => "and-his-name-is-john-cena-1_3.mp3",
+        3 => "door-knocking-very-realistic.mp3",
+        4 => "eas-sound.mp3",
+        5 => "hl2-stalker-scream.mp3",
+        6 => "loud-explosion.mp3",
+        7 => "loud-incorrect-buzzer.mp3",
+        8 => "modern-warfare-2-tactical-nuke-sound.mp3",
+        9 => "nuclear-diarrhea.mp3",
+        10 => "windows-11-error-sound.mp3",
+        _ => "windows-11-error-sound.mp3"
+      };
+
       return FileName;
     }
   }
