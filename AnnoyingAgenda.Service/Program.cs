@@ -1,12 +1,9 @@
 using AnnoyingAgenda.Service;
 using AnnoyingAgenda.Shared;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
 
 var builder = Host.CreateApplicationBuilder(args);
 
 IHost host = Host.CreateDefaultBuilder(args)
-  .UseWindowsService()
   .ConfigureAppConfiguration((context, config) =>
   {
     config.AddJsonFile( 
@@ -30,4 +27,5 @@ IHost host = Host.CreateDefaultBuilder(args)
     service.AddHostedService<Worker>();
   })
   .Build();
+
 host.Run();

@@ -1,8 +1,13 @@
 using AnnoyingAgenda.Shared;
 using Microsoft.Extensions.Options;
+using Microsoft.Toolkit.Uwp.Notifications;
+using Microsoft.Win32;
+using NAudio.Wave;
 using System.Diagnostics;
 using System.IO.Pipes;
+using System.Management.Automation;
 using System.Text.Json;
+using System.Windows.Forms;
 
 namespace AnnoyingAgenda.Service
 {
@@ -25,6 +30,16 @@ namespace AnnoyingAgenda.Service
 
     public Worker(ILogger<Worker> logger, IOptionsMonitor<Settings> settingsMonitor, IOptionsMonitor<List<ToDoList>> listWatcher)
     {
+      RegistryKey? StartupRegistry = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+
+      if (StartupRegistry.GetValueNames().Contains("AnnoyingAgenda"))
+      {
+        StartupRegistry.SetValue("AnnoyingAgenda.Tray", Path.Combine(Environment.ProcessPath, "AnnoyingAgenda.Tray.exe"));
+      }
+
+      StartupRegistry.Close();
+
+
       _logger = logger;
       SettingsWatcher = settingsMonitor;
       ListWatcher = listWatcher;
@@ -85,140 +100,119 @@ namespace AnnoyingAgenda.Service
               if (DateTime.Now >= Item.DueDate && !Item.IsComplete)
               {
                 _logger.LogInformation("Overdue Task: {Item}", Item.Name);
-                
-                if (Process.GetProcessesByName("AnnoyingAgenda.Tray").Length == 0)
-                {
-                  StartTrayApp();
-                }
 
-                if (!ServicePipe.IsConnected)
-                {
-                  ServicePipe.WaitForConnection();
-                  _logger.LogInformation("Client Connection Successful");
-                }
+                Item.TimesNotified++;
 
                 if (Item.TimesNotified >= 0) ExecuteNotificationLevel(1, Item);
                 if (Item.TimesNotified >= 5) ExecuteNotificationLevel(2, Item);
                 if (Item.TimesNotified >= 10) ExecuteNotificationLevel(3, Item);
                 if (Item.TimesNotified >= 15) ExecuteNotificationLevel(4, Item);
-                
-
-                Debug.WriteLine(Item.TimesNotified);
               }
             }
           }
         }
-        await Task.Delay(60000, stoppingToken);
-      }
-    }
-
-    private void StartTrayApp()
-    {
-      try
-      {
-        if (string.IsNullOrWhiteSpace(ServiceSettings.TrayRootPath) || !File.Exists(ServiceSettings.TrayRootPath))
-        {
-          _logger.LogError("Tray app path not found: {Path}", ServiceSettings.TrayRootPath);
-          return;
-        }
-
-        var ProcessInfo = new ProcessStartInfo
-        {
-          FileName = ServiceSettings.TrayRootPath,
-          UseShellExecute = true,
-          RedirectStandardOutput = false,
-          RedirectStandardError = false,
-          CreateNoWindow = true
-        };
-
-        Process.Start(ProcessInfo);
-        _logger.LogInformation("Tray app started: {Path}", ServiceSettings.TrayRootPath);
-      }
-      catch (Exception ex)
-      {
-        _logger.LogError(ex, "Failed to start tray app");
+        await Task.Delay(3000, stoppingToken);
       }
     }
 
     private async void ExecuteNotificationLevel(int Level, ToDoItem Item)
     {
-      Item.TimesNotified++;
+      if (Level == 1) SendToastNotification(Item);
+      if (Level == 2) SpamMessageBoxes(Item); 
+      if (Level == 3) PlaySound(ChooseSound()); 
+      if (Level == 4) CloseDistractingApps();
+    }
 
-      if (Level == 1)
+    private void CloseDistractingApps()
+    {
+      string[] ClosableApps = [
+        "chrome", "chatgpt", "Discord",
+        "minecraft.windows", "Minecraft", "opera",
+        "firefox", "steam", "tiktok",
+        "instagram", "XboxPcApp", "whatsapp",
+        "hulu", "prime", "disney",
+        "tubi", "crunchyroll", "paramount",
+        "espn", "netflix", "roblox", "javaw"
+      ];
+
+      try
       {
-        await SendToast(Item);
+        foreach (string AppName in ClosableApps)
+        {
+          Process[] AppProcesses = Process.GetProcessesByName(AppName);
+
+          foreach (Process AppProcess in AppProcesses)
+          {
+            AppProcess.Kill();
+          }
+        }
       }
-      else if (Level == 2)
+      catch (InvalidOperationException)
       {
-        
-        await SendMessageBox(Item);
-      }
-      else if (Level == 3)
-      {
-       
-        await SendSoundRequest();
-      }
-      else if (Level == 4)
-      {
-       
-        await RequestAppClosure();
+        return;
       }
     }
 
-    private async Task SendMessageBox(ToDoItem Item)
+    private void PlaySound(string FileName)
     {
-      if (!ServicePipe.IsMessageComplete) ServicePipe.WaitForPipeDrain();
+      Debug.WriteLine(FileName);
 
-      if (!ServiceSettings.SettingsItems.Contains(new SettingsItem
+      AudioFileReader Reader = new(Path.Combine("Assets", "Sounds", FileName));
+      WaveOutEvent Player = new();
+
+      Player.Init(Reader);
+      Player.Play();
+
+      while (Player.PlaybackState == PlaybackState.Playing)
       {
-        Name = "Popup Spam",
-        IsEnabled = true
-      })) return;
-
-      var Writer = new StreamWriter(ServicePipe) { AutoFlush = true };
-      await Writer.WriteLineAsync($"Message Box Notification:{Item.Name} due on {Item.DueDate:MM-dd-yyyy hh:mm}");
+        Task.Delay(100).Wait();
+      }
     }
 
-    private async Task SendSoundRequest()
+    private string ChooseSound()
     {
-      if (!ServicePipe.IsMessageComplete) ServicePipe.WaitForPipeDrain();
+      Random RandomNumber = new();
+      int ChosenNumber = RandomNumber.Next(1, 11);
+      string FileName = string.Empty;
 
-      if (!ServiceSettings.SettingsItems.Contains(new SettingsItem
+      FileName = ChosenNumber switch
       {
-        Name = "Play Sounds",
-        IsEnabled = true
-      })) return;
+        1 => "america-eagle-gunshots.mp3",
+        2 => "and-his-name-is-john-cena-1_3.mp3",
+        3 => "door-knocking-very-realistic.mp3",
+        4 => "eas-sound.mp3",
+        5 => "hl2-stalker-scream.mp3",
+        6 => "loud-explosion.mp3",
+        7 => "loud-incorrect-buzzer.mp3",
+        8 => "modern-warfare-2-tactical-nuke-sound.mp3",
+        9 => "nuclear-diarrhea.mp3",
+        10 => "windows-11-error-sound.mp3",
+        _ => "windows-11-error-sound.mp3"
+      };
 
-      var Writer = new StreamWriter(ServicePipe) { AutoFlush = true };
-      await Writer.WriteLineAsync($"Play Sound");
+      return FileName;
     }
 
-    private async Task RequestAppClosure()
+    private void SpamMessageBoxes(ToDoItem Item)
     {
-      if (!ServicePipe.IsMessageComplete) ServicePipe.WaitForPipeDrain();
-
-      if (!ServiceSettings.SettingsItems.Contains(new SettingsItem
+      for(int i = 0; i < Item.TimesNotified; i++)
       {
-        Name = "Close Apps",
-        IsEnabled = true
-      })) return;
-
-      var Writer = new StreamWriter(ServicePipe) { AutoFlush = true };
-      await Writer.WriteLineAsync($"Close Apps");
+        MessageBox.Show("Overdue Task",
+          $"{Item.Name} was due {Item.DueDate.ToString("MM/dd/yyyy HH:mm")}",
+          MessageBoxButtons.OK,
+          MessageBoxIcon.Exclamation);
+      }
     }
 
-    private async Task SendToast(ToDoItem Item)
+    private void SendToastNotification(ToDoItem Item)
     {
-      if (!ServicePipe.IsMessageComplete) ServicePipe.WaitForPipeDrain();
+      ToastContentBuilder Toast = new ToastContentBuilder()
+        .AddText("Overdue Task")
+        .AddText($"{Item.Name} was due {Item.DueDate.ToString("MM/dd/yyyy HH:mm")}")
+        .SetToastScenario(ToastScenario.Reminder)
+        .SetToastDuration(ToastDuration.Short);
 
-      if (!ServiceSettings.SettingsItems.Contains(new SettingsItem
-      {
-        Name = "Notification Bomb",
-        IsEnabled = true
-      })) return;
-
-      var Writer = new StreamWriter(ServicePipe) { AutoFlush = true };
-      await Writer.WriteLineAsync($"Toast Notification:{Item.Name} due on {Item.DueDate:MM-dd-yyyy hh:mm}");
+      Toast.Show();
     }
   }
 }

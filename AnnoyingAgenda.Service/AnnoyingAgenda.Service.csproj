@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Worker">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net8.0-windows10.0.17763.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <Platforms>AnyCPU;x64</Platforms>
@@ -10,7 +10,6 @@
     <Title>Annoying Agenda Service</Title>
     <Description>Background Service for Annoying Agenda</Description>
     <Product>Annoying Agenda</Product>
-		<UseWindowsServiceIntergration>true</UseWindowsServiceIntergration>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,6 +17,7 @@
 		<PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="10.0.3" />
     <PackageReference Include="Microsoft.Toolkit.Uwp.Notifications" Version="7.1.3" />
     <PackageReference Include="NAudio" Version="2.2.1" />
+		<PackageReference Include="Microsoft.PowerShell.SDK" Version="7.4.0" />
   </ItemGroup>
 
   <Import Project="..\AnnoyingAgenda.Shared\AnnoyingAgenda.Shared.projitems" Label="Shared" />
