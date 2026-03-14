@@ -114,7 +114,9 @@ namespace AnnoyingAgenda.Service
 
     private void CloseDistractingApps()
     {
-      string[] ClosableApps = [
+      if (ServiceSettings.SettingsItems.Contains(new SettingsItem { Name = "Close Apps", IsEnabled = false }))
+      {
+        string[] ClosableApps = [
         "chrome", "chatgpt", "Discord",
         "minecraft.windows", "Minecraft", "opera",
         "firefox", "steam", "tiktok",
@@ -124,37 +126,39 @@ namespace AnnoyingAgenda.Service
         "espn", "netflix", "roblox", "javaw"
       ];
 
-      try
-      {
-        foreach (string AppName in ClosableApps)
+        try
         {
-          Process[] AppProcesses = Process.GetProcessesByName(AppName);
-
-          foreach (Process AppProcess in AppProcesses)
+          foreach (string AppName in ClosableApps)
           {
-            AppProcess.Kill();
+            Process[] AppProcesses = Process.GetProcessesByName(AppName);
+
+            foreach (Process AppProcess in AppProcesses)
+            {
+              AppProcess.Kill();
+            }
           }
         }
-      }
-      catch (InvalidOperationException)
-      {
-        return;
+        catch (InvalidOperationException)
+        {
+          return;
+        }
       }
     }
 
     private void PlaySound(string FileName)
     {
-      Debug.WriteLine(FileName);
-
-      AudioFileReader Reader = new(Path.Combine("Assets", "Sounds", FileName));
-      WaveOutEvent Player = new();
-
-      Player.Init(Reader);
-      Player.Play();
-
-      while (Player.PlaybackState == PlaybackState.Playing)
+      if (ServiceSettings.SettingsItems.Contains(new SettingsItem { Name = "Play Sounds", IsEnabled = true}))
       {
-        Task.Delay(100).Wait();
+        AudioFileReader Reader = new(Path.Combine("Assets", "Sounds", FileName));
+        WaveOutEvent Player = new();
+
+        Player.Init(Reader);
+        Player.Play();
+
+        while (Player.PlaybackState == PlaybackState.Playing)
+        {
+          Task.Delay(100).Wait();
+        }
       }
     }
 
@@ -184,24 +188,30 @@ namespace AnnoyingAgenda.Service
 
     private void SpamMessageBoxes(ToDoItem Item)
     {
-      for(int i = 0; i < Item.TimesNotified; i++)
+      if (ServiceSettings.SettingsItems.Contains(new SettingsItem() { Name = "Popup Spam", IsEnabled = true }))
       {
-        MessageBox.Show("Overdue Task",
-          $"{Item.Name} was due {Item.DueDate.ToString("MM/dd/yyyy HH:mm")}",
-          MessageBoxButtons.OK,
-          MessageBoxIcon.Exclamation);
+        for (int i = 0; i < Item.TimesNotified; i++)
+        {
+          MessageBox.Show("Overdue Task",
+            $"{Item.Name} was due {Item.DueDate.ToString("MM/dd/yyyy HH:mm")}",
+            MessageBoxButtons.OK,
+            MessageBoxIcon.Exclamation);
+        }
       }
     }
 
     private void SendToastNotification(ToDoItem Item)
     {
-      ToastContentBuilder Toast = new ToastContentBuilder()
-        .AddText("Overdue Task")
-        .AddText($"{Item.Name} was due {Item.DueDate.ToString("MM/dd/yyyy HH:mm")}")
-        .SetToastScenario(ToastScenario.Reminder)
-        .SetToastDuration(ToastDuration.Short);
+      if (ServiceSettings.SettingsItems.Contains(new SettingsItem() { Name = "Notification Bomb", IsEnabled = true }))
+      {
+        ToastContentBuilder Toast = new ToastContentBuilder()
+         .AddText("Overdue Task")
+         .AddText($"{Item.Name} was due {Item.DueDate.ToString("MM/dd/yyyy HH:mm")}")
+         .SetToastScenario(ToastScenario.Reminder)
+         .SetToastDuration(ToastDuration.Short);
 
-      Toast.Show();
+        Toast.Show();
+      }
     }
   }
 }
