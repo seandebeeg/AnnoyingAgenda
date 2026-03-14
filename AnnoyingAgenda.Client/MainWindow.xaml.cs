@@ -6,8 +6,8 @@ using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using System.Windows.Controls;
 using System.ComponentModel;
-using System.Security.Principal;
 using System.Text.Json.Nodes;
+using System.Diagnostics;
 
 namespace AnnoyingAgenda.Client
 {
@@ -16,7 +16,6 @@ namespace AnnoyingAgenda.Client
     private string _pageTitle;
 
     public event PropertyChangedEventHandler? PropertyChanged;
-
     public string WindowTitle { get; set; }
 
     public string PageTitle
@@ -37,10 +36,6 @@ namespace AnnoyingAgenda.Client
       this.DataContext = this;
       WindowTitle = "Annoying Agenda";
       PageTitle = "Main Menu";
-
-      var UserIdentity = WindowsIdentity.GetCurrent();
-      var Principal = new WindowsPrincipal(UserIdentity);
-      if (Principal.IsInRole(WindowsBuiltInRole.Administrator)) MainNavigation.Navigate(new SettingsPage(this));
     }
 
     private void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -79,9 +74,20 @@ namespace AnnoyingAgenda.Client
 
       ServiceSettings.ClientRootPath = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "AnnoyingAgenda.Client.exe");
       ServiceSettings.ServiceRootPath = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "AnnoyingAgenda.Service.exe");
-      ServiceSettings.TrayRootPath = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "AnnoyingAgenda.Tray.exe");
 
       File.WriteAllText(SettingsJsonPath, JsonSerializer.Serialize(ServiceSettings, new JsonSerializerOptions() { WriteIndented = true }));
+
+      if (Process.GetProcessesByName("AnnoyingAgenda.Service").Length == 0)
+      {
+        ProcessStartInfo ServicePSI = new()
+        {
+          FileName = ServiceSettings.ServiceRootPath, 
+          UseShellExecute = false,
+          CreateNoWindow = true
+        };
+
+        Process.Start(ServicePSI);
+      }
     }
 
     private void CloseButton(object sender, RoutedEventArgs e)

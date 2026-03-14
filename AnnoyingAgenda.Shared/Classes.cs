@@ -34,8 +34,6 @@
   {
     public string ClientRootPath { get; set; }
     public string ServiceRootPath { get; set; }
-    public string TrayRootPath { get; set; }
-    public bool IsServiceInstalled { get; set; }
     public List<SettingsItem> SettingsItems { get; set; }
   }
 
