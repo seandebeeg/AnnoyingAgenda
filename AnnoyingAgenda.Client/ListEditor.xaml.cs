@@ -7,7 +7,6 @@ using System.Windows;
 using System.Windows.Media.Animation;
 using System.Windows.Media;
 using System.Text.Json.Nodes;
-using System.Management.Automation;
 
 namespace AnnoyingAgenda.Client
 {
@@ -152,7 +151,7 @@ namespace AnnoyingAgenda.Client
 
     private void SaveClick(object sender, RoutedEventArgs e)
     {
-      if (AllLists.Count > 1)
+      if (AllLists.Count >= 1)
       {
         ToDoList? OldCurrentList = AllLists.Find(L => L.Name == CurrentList.Name && L.Purpose == CurrentList.Purpose);
         int OldIndex = AllLists.FindIndex(L => L.Name == CurrentList.Name && L.Purpose == CurrentList.Purpose);

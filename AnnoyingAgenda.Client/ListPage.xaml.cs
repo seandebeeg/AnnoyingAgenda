@@ -5,7 +5,6 @@ using System.IO;
 using System.Windows.Media;
 using System.Windows;
 using System.Windows.Controls;
-using System.Diagnostics;
 
 namespace AnnoyingAgenda.Client
 {
@@ -14,7 +13,6 @@ namespace AnnoyingAgenda.Client
     private MainWindow ParentWindow;
     private List<ToDoList>? AllLists = [];
     private ToDoList? SelectedList;
-    private Button ListButton;
     public ListPage(MainWindow _parentWindow)
     {
       InitializeComponent();
@@ -23,7 +21,6 @@ namespace AnnoyingAgenda.Client
       ParentWindow.PageTitle = "Lists";
 
       var JsonFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Annoying Agenda", "Lists.json");
-      
 
       if (!File.Exists(JsonFilePath) || string.IsNullOrWhiteSpace(File.ReadAllText(JsonFilePath)))
       {
@@ -72,9 +69,7 @@ namespace AnnoyingAgenda.Client
 
       if (!ListPopup.IsOpen) return;
 
-      ListButton = (Button)e.Source;
-
-      Debug.WriteLine(ListButton.Opacity);
+      Button ListButton = (Button)e.Source;
      
       string NameAndPurpose = (string)ListButton.Content;
       string Name = NameAndPurpose.Split(" - ")[0];
@@ -104,12 +99,7 @@ namespace AnnoyingAgenda.Client
         JsonNode? ListNode = JsonNode.Parse(File.ReadAllText(JsonFilePath));
         JsonArray JsonListArray = new();
 
-        Debug.WriteLine(ListButton);
-
-        foreach (ToDoList List in AllLists)
-        {
-          JsonListArray.Add(List);
-        }
+        foreach (ToDoList List in AllLists) JsonListArray.Add(List);
 
         ListNode["AllLists"] = JsonListArray;
 
@@ -119,28 +109,11 @@ namespace AnnoyingAgenda.Client
       }
     }
 
-    private void OpenList(object sender, RoutedEventArgs e)
-    {
-      this.SelectedList = SelectedList;
-
-      ParentWindow.MainNavigation.Navigate(new ListEditor(ParentWindow, SelectedList));
-    }
-
-    private void NewListButton(object sender, RoutedEventArgs e)
-    {
-      NewListPopup.IsOpen = true;
-    }
-
-    private void CancelPopupButton(object sender, RoutedEventArgs e)
-    {
-      NewListPopup.IsOpen = false;
-    }
-
-    private void HomeMenuButton(object sender, RoutedEventArgs e)
-    {
-      ParentWindow.MainNavigation.Navigate(new MainMenu(ParentWindow));
-    }
-
+    private void OpenList(object sender, RoutedEventArgs e) => ParentWindow.MainNavigation.Navigate(new ListEditor(ParentWindow, SelectedList));
+    private void NewListButton(object sender, RoutedEventArgs e) => NewListPopup.IsOpen = true;
+    private void CancelPopupButton(object sender, RoutedEventArgs e) => NewListPopup.IsOpen = false;
+    private void HomeMenuButton(object sender, RoutedEventArgs e) => ParentWindow.MainNavigation.Navigate(new MainMenu(ParentWindow));
+   
     private void CreatePopupButton(object sender, RoutedEventArgs e)
     {
       if (string.IsNullOrWhiteSpace(ListName.Text) || string.IsNullOrEmpty(ListPurpose.Text))

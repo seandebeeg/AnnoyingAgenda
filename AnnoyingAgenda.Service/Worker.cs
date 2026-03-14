@@ -4,8 +4,6 @@ using Microsoft.Toolkit.Uwp.Notifications;
 using Microsoft.Win32;
 using NAudio.Wave;
 using System.Diagnostics;
-using System.IO.Pipes;
-using System.Management.Automation;
 using System.Text.Json;
 using System.Windows.Forms;
 
@@ -21,24 +19,16 @@ namespace AnnoyingAgenda.Service
     private IOptionsMonitor<List<ToDoList>> ListWatcher;
     private object Sync = new();
    
-
-    private static NamedPipeServerStream ServicePipe = new( //Client side is AnnoyingAgenda.Tray
-       "AnnoyingAgenda",
-       PipeDirection.Out,
-       1,
-       PipeTransmissionMode.Message);
-
     public Worker(ILogger<Worker> logger, IOptionsMonitor<Settings> settingsMonitor, IOptionsMonitor<List<ToDoList>> listWatcher)
     {
       RegistryKey? StartupRegistry = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
 
       if (StartupRegistry.GetValueNames().Contains("AnnoyingAgenda"))
       {
-        StartupRegistry.SetValue("AnnoyingAgenda.Tray", Path.Combine(Environment.ProcessPath, "AnnoyingAgenda.Tray.exe"));
+        StartupRegistry.SetValue("AnnoyingAgenda.Service", Path.Combine(Environment.ProcessPath, "AnnoyingAgenda.Service.exe"));
       }
 
       StartupRegistry.Close();
-
 
       _logger = logger;
       SettingsWatcher = settingsMonitor;
@@ -84,7 +74,6 @@ namespace AnnoyingAgenda.Service
       }
 
       ServiceSettings.ServiceRootPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "AnnoyingAgenda.Service.exe");
-      ServiceSettings.TrayRootPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "AnnoyingAgenda.Tray.exe");
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -111,11 +100,11 @@ namespace AnnoyingAgenda.Service
             }
           }
         }
-        await Task.Delay(3000, stoppingToken);
+        await Task.Delay(60000, stoppingToken);
       }
     }
 
-    private async void ExecuteNotificationLevel(int Level, ToDoItem Item)
+    private void ExecuteNotificationLevel(int Level, ToDoItem Item)
     {
       if (Level == 1) SendToastNotification(Item);
       if (Level == 2) SpamMessageBoxes(Item); 
