@@ -26,5 +26,18 @@
 		<PackageReference Include="Microsoft.PowerShell.SDK" Version="7.4.0" />
   </ItemGroup>
 
+	<ItemGroup>
+		<EmbeddedResource Include="Assets\Sounds\america-eagle-gunshots.mp3" CopyToOutputDirectory="Always" />
+		<EmbeddedResource Include="Assets\Sounds\and-his-name-is-john-cena-1_3.mp3" CopyToOutputDirectory="Always" />
+		<EmbeddedResource Include="Assets\Sounds\door-knocking-very-realistic.mp3" CopyToOutputDirectory="Always" />
+		<EmbeddedResource Include="Assets\Sounds\eas-sound.mp3" CopyToOutputDirectory="Always" />
+		<EmbeddedResource Include="Assets\Sounds\hl2-stalker-scream.mp3" CopyToOutputDirectory="Always" />
+		<EmbeddedResource Include="Assets\Sounds\loud-explosion.mp3" CopyToOutputDirectory="Always" />
+		<EmbeddedResource Include="Assets\Sounds\loud-incorrect-buzzer.mp3" CopyToOutputDirectory="Always" />
+		<EmbeddedResource Include="Assets\Sounds\modern-warfare-2-tactical-nuke-sound.mp3" CopyToOutputDirectory="Always" />
+		<EmbeddedResource Include="Assets\Sounds\nuclear-diarrhea.mp3" CopyToOutputDirectory="Always" />
+		<EmbeddedResource Include="Assets\Sounds\windows-11-error-sound.mp3" CopyToOutputDirectory="Always" />
+	</ItemGroup>
+
   <Import Project="..\AnnoyingAgenda.Shared\AnnoyingAgenda.Shared.projitems" Label="Shared" />
 </Project>

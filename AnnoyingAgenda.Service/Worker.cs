@@ -117,14 +117,14 @@ namespace AnnoyingAgenda.Service
       if (ServiceSettings.SettingsItems.Contains(new SettingsItem { Name = "Close Apps", IsEnabled = false }))
       {
         string[] ClosableApps = [
-        "chrome", "chatgpt", "Discord",
-        "minecraft.windows", "Minecraft", "opera",
-        "firefox", "steam", "tiktok",
-        "instagram", "XboxPcApp", "whatsapp",
-        "hulu", "prime", "disney",
-        "tubi", "crunchyroll", "paramount",
-        "espn", "netflix", "roblox", "javaw"
-      ];
+          "chrome", "chatgpt", "Discord",
+          "minecraft.windows", "Minecraft", "opera",
+          "firefox", "steam", "tiktok",
+          "instagram", "XboxPcApp", "whatsapp",
+          "hulu", "prime", "disney",
+          "tubi", "crunchyroll", "paramount",
+          "espn", "netflix", "roblox", "javaw"
+        ];
 
         try
         {
