@@ -114,16 +114,19 @@ namespace AnnoyingAgenda.Service
 
     private void CloseDistractingApps()
     {
-      if (ServiceSettings.SettingsItems.Contains(new SettingsItem { Name = "Close Apps", IsEnabled = false }))
+      if (ServiceSettings.SettingsItems.Contains(new SettingsItem { Name = "Close Apps", IsEnabled = true }))
       {
         string[] ClosableApps = [
-          "chrome", "chatgpt", "Discord",
+          "chrome", "ChatGPT", "Discord",
           "minecraft.windows", "Minecraft", "opera",
           "firefox", "steam", "tiktok",
-          "instagram", "XboxPcApp", "whatsapp",
-          "hulu", "prime", "disney",
-          "tubi", "crunchyroll", "paramount",
-          "espn", "netflix", "roblox", "javaw"
+          "instagram", "XboxPcApp", "WhatsApp",
+          "Hulu", "PrimeVideo.UI", "DisneyPlus",
+          "Tubi", "Crunchyroll", "ParamountPlus", "espn", 
+          "RobloxStudio", "RobloxPlayerBeta", "RobloxPlayerLauncher", //roblox processes
+          "java", "javaw" /*Java virtual machines*/,
+          "msedge", "notepad", "Spotify", "AppleMusic",
+          "EpicGamesLauncher", "Copilot", "PhoneExperienceHost" //windows phone link
         ];
 
         try
