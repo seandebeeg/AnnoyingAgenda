@@ -3,6 +3,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.Toolkit.Uwp.Notifications;
 using Microsoft.Win32;
 using NAudio.Wave;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Text.Json;
 using System.Windows.Forms;
@@ -80,8 +81,12 @@ namespace AnnoyingAgenda.Service
     {
       while (!stoppingToken.IsCancellationRequested)
       {
+        Random RandomNumberPicker = new();
+        int RandomNumber = RandomNumberPicker.Next(60000, 180000);
+
         lock (Sync)
         {
+         
           foreach (ToDoList List in AllLists)
           {
             foreach (ToDoItem Item in List.ListItems)
@@ -100,7 +105,7 @@ namespace AnnoyingAgenda.Service
             }
           }
         }
-        await Task.Delay(60000, stoppingToken);
+        await Task.Delay(RandomNumber, stoppingToken);
       }
     }
 
@@ -137,7 +142,15 @@ namespace AnnoyingAgenda.Service
 
             foreach (Process AppProcess in AppProcesses)
             {
-              AppProcess.Kill();
+              try 
+              {
+                AppProcess.Kill();
+              }
+              catch (Win32Exception) // access denied
+              {
+                _logger.LogInformation($"Couldn't close ${AppProcess}, this process may belong to another user");
+              }
+              
             }
           }
         }
