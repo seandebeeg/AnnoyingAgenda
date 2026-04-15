@@ -270,7 +270,11 @@ namespace AnnoyingAgenda.Client
 
       MessageBoxResult DeletionConfirmation = MessageBox.Show("This action deletes the task", "Confirm Deletion", MessageBoxButton.OKCancel, MessageBoxImage.Exclamation);
 
-      if (WasSearchOpen) SearchPopup.IsOpen = true;
+      if (WasSearchOpen) 
+      { 
+        SearchPopup.IsOpen = true;
+        SearchResultPanel.Children.Remove((Button)e.Source);
+      }
       if (DeletionConfirmation == MessageBoxResult.OK)
       {
         ToDoItem DeletedToDo = GetToDo(sender, e);
@@ -278,6 +282,7 @@ namespace AnnoyingAgenda.Client
 
         TaskPanel.Children.Remove(DeletedTaskButton);
         CurrentList.ListItems.Remove(DeletedToDo);
+        
       }
     }
     
