@@ -151,13 +151,10 @@ namespace AnnoyingAgenda.Client
 
     private void SaveClick(object sender, RoutedEventArgs e)
     {
-      if (AllLists.Count >= 1)
-      {
-        ToDoList? OldCurrentList = AllLists.Find(L => L.Name == CurrentList.Name && L.Purpose == CurrentList.Purpose);
-        int OldIndex = AllLists.FindIndex(L => L.Name == CurrentList.Name && L.Purpose == CurrentList.Purpose);
+      ToDoList? OldCurrentList = AllLists.Find(L => L.Name == CurrentList.Name && L.Purpose == CurrentList.Purpose);
+      int OldIndex = AllLists.FindIndex(L => L.Name == CurrentList.Name && L.Purpose == CurrentList.Purpose);
 
-        AllLists.RemoveAt(OldIndex);
-      }
+      if (AllLists.Contains(OldCurrentList)) AllLists.RemoveAt(OldIndex);
 
       AllLists.Add(CurrentList);
 
