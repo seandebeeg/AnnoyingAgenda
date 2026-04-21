@@ -77,29 +77,30 @@
 
     <Popup Height="400" Width="600" Placement="Center" x:Name="SearchPopup" StaysOpen="True" IsOpen="False">
       <Border BorderBrush="LightGray" BorderThickness="3" Background="White">
-        <StackPanel>
-          <TextBlock Text="Search Term" HorizontalAlignment="Center" FontSize="30" FontFamily="Segoe UI" Foreground="#292929"/>
-          <TextBox x:Name="SearchBox" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="30" FontSize="20" FontFamily="Segoe UI"/>
-          
-          <StackPanel Orientation="Horizontal" Margin="0,20,0,0" HorizontalAlignment="Center">
-            <Border BorderBrush="#e5e5e5" BorderThickness="3" CornerRadius="5" Margin="0,0,10,0" Height="30" Width="50">
-              <Button Content="Search" Click="SearchForEvents" Background="#fbfbfb" Style="{StaticResource WindowButtonTriggers}" FontFamily="Segoe UI" Foreground="#292929"/>
-            </Border>
+        <ScrollViewer VerticalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="True">
+          <StackPanel>
+            <TextBlock Text="Search Term" HorizontalAlignment="Center" FontSize="30" FontFamily="Segoe UI" Foreground="#292929"/>
+            <TextBox x:Name="SearchBox" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="30" FontSize="20" FontFamily="Segoe UI"/>
+
+            <StackPanel Orientation="Horizontal" Margin="0,20,0,0" HorizontalAlignment="Center">
+              <Border BorderBrush="#e5e5e5" BorderThickness="3" CornerRadius="5" Margin="0,0,10,0" Height="30" Width="50">
+                <Button Content="Search" Click="SearchForEvents" Background="#fbfbfb" Style="{StaticResource WindowButtonTriggers}" FontFamily="Segoe UI" Foreground="#292929"/>
+              </Border>
+
+              <Border BorderBrush="#e5e5e5" BorderThickness="3" CornerRadius="5" Margin="10,0,0,0" Height="30" Width="50">
+                <Button Content="Exit" Click="CancelSearchClick" Background="#fbfbfb" Style="{StaticResource WindowButtonTriggers}" FontFamily="Segoe UI" Foreground="#292929"/>
+              </Border>
+            </StackPanel>
             
-            <Border BorderBrush="#e5e5e5" BorderThickness="3" CornerRadius="5" Margin="10,0,0,0" Height="30" Width="50">
-              <Button Content="Exit" Click="CancelSearchClick" Background="#fbfbfb" Style="{StaticResource WindowButtonTriggers}" FontFamily="Segoe UI" Foreground="#292929"/>
-            </Border>
+            <StackPanel x:Name="SearchResultPanel" CanVerticallyScroll="True" ScrollViewer.CanContentScroll="True"></StackPanel>
+
           </StackPanel>
-          
-          <ScrollViewer VerticalScrollBarVisibility="Auto" CanContentScroll="True">
-            <StackPanel x:Name="SearchResultPanel" CanVerticallyScroll="True"></StackPanel>
-          </ScrollViewer>
-        </StackPanel>
+        </ScrollViewer>
       </Border>
     </Popup>
 
-    <ScrollViewer VerticalScrollBarVisibility="Auto">
-      <StackPanel Grid.Column="0" x:Name="TaskPanel" CanVerticallyScroll="True"></StackPanel>
+    <ScrollViewer VerticalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="True">
+      <StackPanel Grid.Column="0" x:Name="TaskPanel" CanVerticallyScroll="True" ScrollViewer.CanContentScroll="True"></StackPanel>
     </ScrollViewer>
    
 

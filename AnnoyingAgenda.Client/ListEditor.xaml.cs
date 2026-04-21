@@ -87,14 +87,7 @@ namespace AnnoyingAgenda.Client
       {
         if (CurrentList.ListItems.Count >= 1)
         {
-          foreach (ToDoItem Item in CurrentList.ListItems)
-          {
-            Button TaskButton = CreateToDoButton(Item.Name, Item.DueDate);
-
-            if (Item.IsComplete) TaskButton.Background = Brushes.LightGreen;
-
-            TaskPanel.Children.Add(TaskButton);
-          }
+          RefreshEvents();
         }
       }
       catch (Exception)
@@ -229,6 +222,7 @@ namespace AnnoyingAgenda.Client
       SearchPopup.IsOpen = false;
       SearchBox.Text = string.Empty;
       SearchResultPanel.Children.Clear();
+      RefreshEvents();
     }
 
     private void ToggleDeletionMode(object sender, RoutedEventArgs e)
@@ -354,6 +348,20 @@ namespace AnnoyingAgenda.Client
         {
           Button MatchingButton = CreateToDoButton(Item.Name, Item.DueDate);
           SearchResultPanel.Children.Add(MatchingButton);
+        }
+      }
+    }
+
+    private void RefreshEvents()
+    {
+      TaskPanel.Children.Clear();
+
+      if(CurrentList.ListItems.Count >= 1)
+      {
+        foreach (ToDoItem Item in CurrentList.ListItems)
+        {
+          Button ToDoButton = CreateToDoButton(Item.Name, Item.DueDate);
+          TaskPanel.Children.Add(ToDoButton);
         }
       }
     }
