@@ -195,7 +195,6 @@ namespace AnnoyingAgenda.Client
       {
         EventDueHour = EventDueHour.Replace("PM", "");
         int EventDueHourNumber = int.Parse(EventDueHour);
-
         EventDueHourNumber += 12;
         EventDueHour = EventDueHourNumber.ToString();
 
@@ -273,7 +272,6 @@ namespace AnnoyingAgenda.Client
 
         TaskPanel.Children.Remove(DeletedTaskButton);
         CurrentList.ListItems.Remove(DeletedToDo);
-        
       }
     }
     
@@ -283,12 +281,10 @@ namespace AnnoyingAgenda.Client
       ToDoItem ToDo = GetToDo(sender, e);
 
       ChangingItem = ToDo;
-
       EditNameBox.Text = ToDo.Name;
       EditDatePicker.SelectedDate = ToDo.DueDate.Date;
       EditHourSelector.Text = ToDo.DueDate.Hour.ToString("hh");
       EditMinuteSelector.Text = ToDo.DueDate.Minute.ToString("mm");
-
       EditEventPopup.IsOpen = true;
     }
 
@@ -327,7 +323,6 @@ namespace AnnoyingAgenda.Client
       }
      
       NewTodo.DueDate = EditDatePicker.DisplayDate.AddHours(int.Parse(EventDueHour)).AddMinutes(EditMinuteSelector.SelectedIndex);
-
       NewTaskButton = CreateToDoButton(NewTodo.Name, NewTodo.DueDate);
 
       CurrentList.ListItems.Remove(EditedTodo);
@@ -341,6 +336,8 @@ namespace AnnoyingAgenda.Client
 
     private void SearchForEvents(object sender, RoutedEventArgs e)
     {
+      SearchResultPanel.Children.Clear();
+
       string SearchTerm = SearchBox.Text.ToLower();
       foreach(ToDoItem Item in CurrentList.ListItems)
       {

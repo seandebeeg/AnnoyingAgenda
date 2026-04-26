@@ -11,7 +11,7 @@ namespace AnnoyingAgenda.Client
   public partial class ListPage : Page
   {
     private MainWindow ParentWindow;
-    private List<ToDoList>? AllLists = [];
+    private List<ToDoList> AllLists = [];
     private ToDoList? SelectedList;
     public ListPage(MainWindow _parentWindow)
     {
@@ -81,6 +81,10 @@ namespace AnnoyingAgenda.Client
 
     private void DeleteList(object sender, RoutedEventArgs e)
     {
+      MessageBoxResult WillDeleteList = MessageBox.Show("Are you sure you want to delete this list?", "Confirm Deletion", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
+
+      if (WillDeleteList == MessageBoxResult.No || WillDeleteList == MessageBoxResult.None) return;
+
       AllLists.Remove(SelectedList);
 
       var JsonFilePath = Path.Combine(
