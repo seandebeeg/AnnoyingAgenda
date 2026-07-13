@@ -24,11 +24,14 @@ namespace AnnoyingAgenda.Service
     {
       RegistryKey? StartupRegistry = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
 
-      if (StartupRegistry.GetValueNames().Contains("AnnoyingAgenda"))
-      {
-        StartupRegistry.SetValue("AnnoyingAgenda.Service", Path.Combine(Environment.ProcessPath, "AnnoyingAgenda.Service.exe"));
-      }
-
+     
+      StartupRegistry.SetValue("AnnoyingAgenda.Service", 
+        new ProcessStartInfo() 
+        { 
+          FileName = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),
+            "AnnoyingAgenda", "AnnoyingAgenda.Service.exe"),
+          CreateNoWindow = true, UseShellExecute = false  });
       StartupRegistry.Close();
 
       _logger = logger;
